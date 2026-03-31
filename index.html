@@ -3,196 +3,392 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>画像生成プロンプトメーカー | Pro</title>
+    <title>画像生成プロンプトメーカー | App Style</title>
     <style>
-        :root { --primary: #3498db; --secondary: #9b59b6; --success: #2ecc71; --danger: #e74c3c; --bg: #f4f7f6; --text: #2c3e50; }
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; -webkit-tap-highlight-color: transparent; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: var(--text); border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.8rem; }
+        :root { --primary: #3498db; --secondary: #9b59b6; --success: #2ecc71; --danger: #e74c3c; --bg: #f4f7f6; --text: #2c3e50; --card-bg: #ffffff; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; line-height: 1.6; -webkit-tap-highlight-color: transparent; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; background: transparent; padding: 10px 0 40px 0; }
+        h1 { text-align: center; color: var(--text); font-size: 1.6rem; margin-bottom: 20px; text-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         
         .how-to-wrap { text-align: center; margin-bottom: 25px; }
-        .how-to-open-btn { background-color: #eaf2f8; color: var(--primary); border: 2px solid var(--primary); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 15px; transition: all 0.3s; }
+        .how-to-open-btn { background-color: #eaf2f8; color: var(--primary); border: 2px solid var(--primary); padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1); }
         .how-to-open-btn:hover { background-color: var(--primary); color: white; }
 
-        /* モーダル */
-        .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
-        .modal-content { background-color: #fff; margin: 8% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 550px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); position: relative; animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); max-height: 85vh; overflow-y: auto; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .close-btn { position: absolute; top: 15px; right: 20px; color: #bbb; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; }
-        .close-btn:hover { color: var(--text); }
-        .modal-content h2 { margin-top: 0; color: var(--text); font-size: 1.2rem; border-bottom: 2px solid #f1f1f1; padding-bottom: 12px; margin-bottom: 15px; }
-        .modal-content ol { padding-left: 20px; }
-        .modal-content li { margin-bottom: 12px; font-size: 0.95rem; }
-        .info-modal-text { font-size: 14px; color: #444; }
-        .info-modal-text ul { margin: 10px 0 0 0; padding-left: 20px; }
-        .info-modal-text li { margin-bottom: 8px; }
-
-        /* 入力セクション */
         .section { margin-bottom: 25px; }
-        .label-row { display: flex; align-items: center; margin-bottom: 10px; }
-        label { font-weight: bold; color: var(--text); font-size: 0.95rem; }
-        .info-icon { cursor: pointer; margin-left: 10px; font-size: 11px; color: #fff; background-color: #bdc3c7; border-radius: 50%; width: 22px; height: 22px; text-align: center; line-height: 22px; transition: background 0.2s; flex-shrink: 0; display: inline-block; }
-        .info-icon:hover { background-color: #95a5a6; }
+        .section-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 10px; color: var(--text); padding-left: 5px; border-left: 4px solid var(--primary); line-height: 1; }
 
-        textarea, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; font-family: inherit; transition: border-color 0.2s; background-color: #fff; }
-        textarea:focus, select:focus { outline: none; border-color: var(--primary); }
-        .subject-textarea { height: 90px; resize: vertical; }
-        .output-textarea { height: 130px; background-color: #f9f9f9; border: 2px dashed #ccc; font-weight: 500; color: #444; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .input-group { display: flex; gap: 10px; align-items: stretch; background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        .subject-textarea { flex-grow: 1; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; font-size: 15px; resize: vertical; height: 80px; font-family: inherit; }
+        .subject-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2); }
         
-        /* ボタン */
-        .btn { border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s; text-align: center; text-decoration: none; display: block; box-sizing: border-box; }
-        .copy-btn { background-color: var(--success); color: white; padding: 15px; font-size: 1.1rem; margin-top: 15px; width: 100%; }
-        .copy-btn:active { transform: scale(0.98); }
-        .reset-btn { background-color: #f1f1f1; color: #777; padding: 10px; font-size: 0.9rem; margin-top: 15px; width: 100%; }
-        
-        .input-group { display: flex; gap: 10px; align-items: flex-start; }
-        .translate-btn { background-color: var(--primary); color: white; padding: 10px 15px; font-size: 0.85rem; white-space: nowrap; height: 45px; }
+        .translate-btn { background-color: var(--primary); color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .translate-btn:active { transform: scale(0.95); }
         .translate-btn:disabled { background-color: #ccc; cursor: wait; }
-        
-        .help-text { font-size: 12px; color: #7f8c8d; margin-top: 6px; }
 
-        @media (max-width: 480px) {
-            .container { padding: 20px; }
-            h1 { font-size: 1.4rem; }
-            .grid { grid-template-columns: 1fr; }
+        @keyframes pulseAlert {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); transform: scale(1); }
+            50% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); transform: scale(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); transform: scale(1); }
         }
+        .translate-btn.needs-translation { background-color: var(--danger); animation: pulseAlert 1.5s infinite; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+        
+        .category-card { background: var(--card-bg); border: 2px solid transparent; border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .category-card:active { transform: scale(0.97); }
+        .category-card.has-value { border-color: #d6eaf8; background-color: #fafdff; }
+        .card-label { font-size: 0.8rem; color: #7f8c8d; font-weight: bold; margin-bottom: 5px; }
+        .card-value { font-size: 1rem; color: var(--text); font-weight: bold; line-height: 1.3; }
+        .card-value.empty { color: #bdc3c7; font-weight: normal; font-size: 0.9rem; }
+        .card-icon { position: absolute; right: 15px; top: 15px; opacity: 0.2; font-size: 1.2rem; }
+
+        .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); animation: fadeIn 0.2s ease-out; }
+        .modal-content { background-color: #fff; position: absolute; bottom: 0; left: 0; width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 25px 20px 40px; box-sizing: border-box; overflow-y: auto; box-shadow: 0 -5px 20px rgba(0,0,0,0.15); animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
+        @media (min-width: 600px) {
+            .modal-content { bottom: auto; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; border-radius: 16px; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1); }
+            @keyframes popIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .close-btn { position: absolute; top: 15px; right: 20px; background: #f1f2f6; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 18px; font-weight: bold; color: #7f8c8d; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal-header { margin-bottom: 20px; padding-right: 40px; }
+        .modal-title { font-size: 1.3rem; margin: 0 0 8px 0; color: var(--text); }
+        .modal-desc { font-size: 0.9rem; color: #7f8c8d; margin: 0; line-height: 1.5; }
+
+        .option-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; padding: 15px; text-align: left; font-size: 1rem; font-weight: bold; color: var(--text); cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .option-btn:active { transform: scale(0.98); background: #f1f2f6; }
+        .option-btn.selected { background: #eaf2f8; border-color: var(--primary); color: var(--primary); }
+        .option-btn.selected::after { content: '✓'; font-weight: bold; font-size: 1.2rem; }
+
+        .output-box { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        .output-textarea { width: 100%; height: 120px; background-color: #f8f9fa; border: 2px dashed #bdc3c7; border-radius: 8px; padding: 15px; font-size: 15px; color: #444; resize: vertical; box-sizing: border-box; margin-bottom: 15px; font-family: inherit; }
+        
+        .action-btn { width: 100%; border: none; border-radius: 10px; padding: 16px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; margin-bottom: 12px; display: block; text-align: center; text-decoration: none; box-sizing: border-box; }
+        .action-btn:active { transform: scale(0.98); }
+        .btn-copy { background-color: var(--success); color: white; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); }
+        .btn-reset { background-color: #f1f2f6; color: #7f8c8d; margin-top: 20px; font-size: 0.95rem; padding: 12px; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="howToModal" class="modal-overlay"><div class="modal-content"><span class="close-btn" onclick="closeModal('howToModal')">&times;</span><h2>📖 ツールの使い方</h2><ol><li><b>ツールを選択:</b> AI（Gemini等）を選びます。</li><li><b>被写体を入力:</b> 日本語で入力。画像参照なら<b>空欄でもOK</b>。</li><li><b>翻訳:</b> 「翻訳」ボタンで英語に変換。</li><li><b>オプション:</b> 画風などを選びます（❓で解説）。</li><li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリ切り替えで生成AIを開き、画像と一緒に貼り付けて送信！</li></ol></div></div>
-    <div id="infoModal" class="modal-overlay"><div class="modal-content"><span class="close-btn" onclick="closeModal('infoModal')">&times;</span><h2 id="infoModalTitle">タイトル</h2><div id="infoModalBody" class="info-modal-text"></div></div></div>
+    <div id="howToModal" class="modal-overlay" onclick="closeModal('howToModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('howToModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">📖 使い方ガイド</h2>
+            </div>
+            <ol style="color: #444; line-height: 1.7;">
+                <li><b>被写体を入力:</b> 「1. 被写体」に描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
+                <li><b>ツールを選択:</b> 「2. オプション設定」の左上にある「0. 生成ツール」カードをタップして、使うAIを選びます。</li>
+                <li><b>オプションを選ぶ:</b> その他のカードをタップして、好みの画風やアングルなどを設定します。</li>
+                <li><b>ポーズの追加:</b> 「6. フレーミング」で「全身」や「上半身」を選ぶと、専用のポーズ設定カードが出現します。</li>
+                <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
+            </ol>
+        </div>
+    </div>
 
-    <div style="display: none;">
-        <div id="data-tool">AIごとに最適なプロンプト形式に自動調整します。Midjourneyは単語区切り、Gemini/ChatGPTは自然な文章、Stable Diffusionはタグ形式になります。</div>
-        <div id="data-subject">画像に描きたいメインの対象です。画像参照メインなら空欄でもAIが画像から推測します。</div>
-        <div id="data-proportion">等身を指定します。<ul><li><b>ちびキャラ</b>: 2.5頭身の小柄で可愛い体型。</li><li><b>高頭身</b>: 8頭身以上のモデル体型。</li></ul></div>
-        <div id="data-medium">基本の表現手法です。<ul><li><b>実写写真</b>: カメラ撮影のようなリアル感。</li><li><b>アニメ</b>: 2Dセル画風のイラスト。</li><li><b>油絵/水彩画</b>: 伝統的な絵画の質感。</li><li><b>3Dレンダー</b>: 立体的なCG表現。</li><li><b>線画</b>: デッサンやラフスケッチ風。</li></ul></div>
-        <div id="data-style">世界観を付加します。<ul><li><b>サイバーパンク</b>: ネオン、未来都市。</li><li><b>スチームパンク</b>: 歯車、蒸気機関。</li><li><b>ダークファンタジー</b>: 重厚な魔法世界。</li><li><b>ポップアート</b>: 派手で現代的なアート。</li><li><b>ミニマリズム</b>: シンプルな美しさ。</li><li><b>レトロ</b>: 懐かしい雰囲気。</li></ul></div>
-        <div id="data-lighting">光の当たり方です。<ul><li><b>シネマティック</b>: ドラマチックな明暗。</li><li><b>自然光</b>: 柔らかい陽射し。</li><li><b>スタジオ照明</b>: 均一で綺麗な光。</li><li><b>ネオン</b>: 雰囲気のある光。</li></ul></div>
-        <div id="data-framing">人物の映る範囲です。<ul><li><b>全身</b>: 頭から足元まで全体。</li><li><b>上半身</b>: 腰から上。</li><li><b>バストアップ</b>: 胸から上（表情強調）。</li></ul></div>
-        <div id="data-camera">撮影角度です。<ul><li><b>広角</b>: 背景を広く入れた時。</li><li><b>俯瞰</b>: 上から見下ろす視点。</li><li><b>あおり</b>: 下から見上げる視点。</li></ul></div>
-        <div id="data-quality">高画質・高精細にするための呪文です。<ul><li><b>最高品質</b>: 全体的な完成度を底上げします。</li><li><b>ArtStation風</b>: プロのような洗練された塗りと構図。</li><li><b>UE5風</b>: リアルな光や空気感を強調。</li></ul></div>
-        <div id="data-aspect">画像の縦横比です。AIツールに合わせて最適なパラメータに変換されます。<ul><li><b>1:1</b>: 正方形。SNSのアイコンなどに最適です。</li><li><b>16:9</b>: 横長。風景や映画風に。</li><li><b>9:16</b>: 縦長。スマホ全画面や立ち絵に。</li><li><b>3:2 / 2:3</b>: 標準的な写真サイズ。</li></ul></div>
-        <div id="data-background">背景を元の画像に合わせるか、選んだスタイルに合わせて新しく作るかを選べます。</div>
+    <div id="selectionModal" class="modal-overlay" onclick="closeModal('selectionModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('selectionModal')">&times;</button>
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">タイトル</h2>
+                <p id="modalDesc" class="modal-desc">説明文</p>
+            </div>
+            <div id="optionList" class="option-list"></div>
+        </div>
     </div>
 
     <div class="container">
         <h1>🎨 Prompt Maker Pro</h1>
-        <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方</button></div>
+        <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方を見る</button></div>
 
         <div class="section">
-            <div class="label-row"><label>0. 生成ツールの選択</label><span class="info-icon" onclick="openInfoModal('生成ツールの選択', 'data-tool')">❓</span></div>
-            <select id="generator-tool" onchange="generatePrompt();">
-                <option value="gemini" selected>Gemini</option>
-                <option value="chatgpt">ChatGPT / DALL-E 3</option>
-                <option value="midjourney">Midjourney (Discord)</option>
-                <option value="stablediffusion">Stable Diffusion</option>
-            </select>
-        </div>
-
-        <div class="section">
-            <div class="label-row"><label>1. 被写体の説明 (Subject)</label><span class="info-icon" onclick="openInfoModal('被写体の説明', 'data-subject')">❓</span></div>
+            <div class="section-title">1. 被写体 (Subject)</div>
             <div class="input-group">
-                <textarea id="main-subject" class="subject-textarea" placeholder="例: 赤いドレスの女の子、サイバーパンクな街並み" oninput="generatePrompt()"></textarea>
-                <button id="translate-btn" class="btn translate-btn" onclick="translateSubject()">🇬🇧 翻訳</button>
+                <textarea id="main-subject" class="subject-textarea" placeholder="例: 赤いドレスの女の子、近未来の街" oninput="generatePrompt()"></textarea>
+                <button class="translate-btn" id="translate-btn" onclick="translateSubject()">🇬🇧<br>翻訳</button>
             </div>
-            <div class="help-text">※参照画像がある場合は<b>空欄のまま</b>でも大丈夫です。</div>
-        </div>
-
-        <div class="section grid">
-            <div><div class="label-row"><label>2. 頭身・体型</label><span class="info-icon" onclick="openInfoModal('頭身・体型', 'data-proportion')">❓</span></div><select id="proportion" onchange="generatePrompt()"><option value="">指定なし</option><option value="chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes">ちびキャラ・SDキャラ</option><option value="tall stature, 8 heads tall, model proportions, long legs">高頭身・モデル体型</option></select></div>
-            <div><div class="label-row"><label>3. ベースの画風</label><span class="info-icon" onclick="openInfoModal('ベースの画風', 'data-medium')">❓</span></div><select id="medium" onchange="generatePrompt()"><option value="">指定なし</option><option value="photography, photorealistic">実写写真</option><option value="anime style, 2d illustration">アニメ</option><option value="oil painting, traditional art">油絵</option><option value="watercolor painting">水彩画</option><option value="3d render, octane render">3Dレンダー</option><option value="pencil sketch, line art">線画</option></select></div>
-            <div><div class="label-row"><label>4. アートスタイル</label><span class="info-icon" onclick="openInfoModal('アートスタイル', 'data-style')">❓</span></div><select id="style" onchange="generatePrompt()"><option value="">指定なし</option><option value="cyberpunk style, neon colors">サイバーパンク</option><option value="steampunk style">スチームパンク</option><option value="dark fantasy, gothic">ダークファンタジー</option><option value="pop art, vibrant colors">ポップアート</option><option value="minimalist">ミニマリズム</option><option value="retro vintage">レトロ</option></select></div>
-            <div><div class="label-row"><label>5. 照明</label><span class="info-icon" onclick="openInfoModal('照明', 'data-lighting')">❓</span></div><select id="lighting" onchange="generatePrompt()"><option value="">指定なし</option><option value="cinematic lighting">シネマティック</option><option value="natural light, golden hour">自然光</option><option value="studio lighting">スタジオ照明</option><option value="neon lighting, moody">ネオン</option></select></div>
-            <div><div class="label-row"><label>6. フレーミング</label><span class="info-icon" onclick="openInfoModal('フレーミング', 'data-framing')">❓</span></div><select id="framing" onchange="generatePrompt()"><option value="">指定なし</option><option value="full body shot">全身</option><option value="upper body shot">上半身</option><option value="bust-up shot">バストアップ</option></select></div>
-            <div><div class="label-row"><label>7. アングル</label><span class="info-icon" onclick="openInfoModal('アングル', 'data-camera')">❓</span></div><select id="camera" onchange="generatePrompt()"><option value="">指定なし</option><option value="wide angle">広角</option><option value="from above, high angle">俯瞰</option><option value="from below, low angle">あおり</option></select></div>
-            <div><div class="label-row"><label>8. 品質</label><span class="info-icon" onclick="openInfoModal('品質', 'data-quality')">❓</span></div><select id="quality" onchange="generatePrompt()"><option value="">指定なし</option><option value="masterpiece, highly detailed, 8k resolution">最高品質</option><option value="trending on artstation, sharp focus">ArtStation風</option></select></div>
-            <div><div class="label-row"><label>9. アスペクト比</label><span class="info-icon" onclick="openInfoModal('アスペクト比', 'data-aspect')">❓</span></div><select id="aspect-ratio" onchange="generatePrompt()"><option value="">指定なし</option><option value="--ar 1:1">1:1 (正方形)</option><option value="--ar 16:9">16:9 (横長)</option><option value="--ar 9:16">9:16 (縦長)</option><option value="--ar 3:2">3:2</option></select></div>
-            <div><div class="label-row"><label>10. 背景の扱い</label><span class="info-icon" onclick="openInfoModal('背景の扱い', 'data-background')">❓</span></div><select id="background-handling" onchange="generatePrompt()"><option value="">指定なし</option><option value="keep_original_background">背景維持</option><option value="change_to_style_background">スタイルに合わせる</option></select></div>
+            <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px; padding-left: 5px;">※画像参照がメインの場合は空欄でも生成可能です。</div>
         </div>
 
         <div class="section">
-            <label>✨ 完成したプロンプト</label>
-            <textarea id="output" class="output-textarea" readonly placeholder="設定を選ぶと生成されます..."></textarea>
-            
-            <button class="btn copy-btn" onclick="copyPrompt()">📋 プロンプトをコピーする</button>
-            <button class="btn reset-btn" onclick="resetForm()">🗑️ 入力内容をリセット</button>
+            <div class="section-title">2. オプション設定</div>
+            <div class="grid">
+                <div class="category-card" onclick="openSelection('tool')"><span class="card-icon">🤖</span><div class="card-label">0. 生成ツール</div><div class="card-value" id="val-tool">Gemini</div></div>
+                <div class="category-card" onclick="openSelection('proportion')"><span class="card-icon">📏</span><div class="card-label">2. 頭身・体型</div><div class="card-value empty" id="val-proportion">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('medium')"><span class="card-icon">🖌️</span><div class="card-label">3. ベースの画風</div><div class="card-value empty" id="val-medium">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('style')"><span class="card-icon">🎭</span><div class="card-label">4. アートスタイル</div><div class="card-value empty" id="val-style">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('lighting')"><span class="card-icon">💡</span><div class="card-label">5. 照明</div><div class="card-value empty" id="val-lighting">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('framing')"><span class="card-icon">📸</span><div class="card-label">6. フレーミング</div><div class="card-value empty" id="val-framing">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('camera')"><span class="card-icon">🎥</span><div class="card-label">7. アングル</div><div class="card-value empty" id="val-camera">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('quality')"><span class="card-icon">✨</span><div class="card-label">8. 品質</div><div class="card-value empty" id="val-quality">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('aspect')"><span class="card-icon">📱</span><div class="card-label">9. アスペクト比</div><div class="card-value empty" id="val-aspect">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('background')"><span class="card-icon">🏞️</span><div class="card-label">10. 背景の扱い</div><div class="card-value empty" id="val-background">指定なし</div></div>
+                
+                <div id="card-posture" class="category-card hidden" onclick="openSelection('posture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">🧍</span><div class="card-label" style="color: #9b59b6;">11. 基本姿勢</div><div class="card-value empty" id="val-posture">指定なし</div></div>
+                <div id="card-gesture" class="category-card hidden" onclick="openSelection('gesture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">✌️</span><div class="card-label" style="color: #9b59b6;">12. ポーズ・仕草</div><div class="card-value empty" id="val-gesture">指定なし</div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">✨ 完成したプロンプト</div>
+            <div class="output-box">
+                <textarea id="output" class="output-textarea" readonly placeholder="設定を選ぶとここに自動生成されます..."></textarea>
+                <button class="action-btn btn-copy" onclick="copyPrompt()">📋 プロンプトをコピー</button>
+                <button class="action-btn btn-reset" onclick="resetForm()">🗑️ 入力内容をすべてリセット</button>
+            </div>
         </div>
     </div>
 
     <script>
+        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '' };
+
+        const promptData = {
+            tool: {
+                title: "生成ツールの選択", desc: "AIに合わせてプロンプトの形式を自動調整します。",
+                options: [
+                    { val: 'gemini', label: 'Gemini (推奨)' }, { val: 'chatgpt', label: 'ChatGPT / DALL-E 3' },
+                    { val: 'midjourney', label: 'Midjourney (Discord)' }, { val: 'stablediffusion', label: 'Stable Diffusion' }
+                ]
+            },
+            proportion: {
+                title: "頭身・体型", desc: "キャラクターのデフォルメ具合やスタイルを指定します。",
+                options: [
+                    { val: '', label: '指定なし (画像にお任せ)' },
+                    { val: 'chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes', label: 'ちびキャラ・SDキャラ' },
+                    { val: 'tall stature, 8 heads tall, model proportions, long legs', label: '高頭身・モデル体型' }
+                ]
+            },
+            medium: {
+                title: "ベースの画風", desc: "画像全体の基本的な表現手法を決定します。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'photography, photorealistic', label: '実写写真' },
+                    { val: 'anime style, 2d illustration', label: 'アニメ・イラスト' }, { val: 'oil painting, traditional art', label: '油絵・伝統絵画' },
+                    { val: 'watercolor painting', label: '水彩画' }, { val: '3d render, octane render', label: '3Dレンダー・CG' },
+                    { val: 'pencil sketch, line art', label: '鉛筆画・線画' }
+                ]
+            },
+            style: {
+                title: "アートスタイル", desc: "作品の世界観やテーマを付加します。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'cyberpunk style, neon colors', label: 'サイバーパンク' },
+                    { val: 'steampunk style', label: 'スチームパンク' }, { val: 'dark fantasy, gothic', label: 'ダークファンタジー' },
+                    { val: 'pop art, vibrant colors', label: 'ポップアート' }, { val: 'minimalist', label: 'ミニマリズム' },
+                    { val: 'retro vintage', label: 'レトロ・ヴィンテージ' }
+                ]
+            },
+            lighting: {
+                title: "照明・ライティング", desc: "光の当たり方で画像の雰囲気をガラッと変えます。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'cinematic lighting', label: 'シネマティック (ドラマチック)' },
+                    { val: 'natural light, golden hour', label: '自然光・夕暮れ' }, { val: 'studio lighting', label: 'スタジオ照明 (均一で綺麗)' },
+                    { val: 'neon lighting, moody', label: 'ネオン・ムーディー' }
+                ]
+            },
+            framing: {
+                title: "フレーミング", desc: "人物がカメラに映る範囲を指定します。※「全身」「上半身」を選ぶとポーズ設定が追加されます。",
+                options: [
+                    { val: '', label: '指定なし (画像構図を維持)' }, { val: 'full body shot, showing entire body', label: '全身' },
+                    { val: 'upper body shot, from waist up', label: '上半身' }, { val: 'bust-up shot, close-up on face', label: 'バストアップ' }
+                ]
+            },
+            camera: {
+                title: "アングル", desc: "カメラの撮影角度を指定します。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'wide angle, panoramic', label: '広角・パノラマ' },
+                    { val: 'from above, high angle', label: '俯瞰 (上から見下ろす)' }, { val: 'from below, low angle', label: 'あおり (下から見上げる)' }
+                ]
+            },
+            quality: {
+                title: "品質", desc: "AIに高精細に描かせるための専用呪文です。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'masterpiece, highly detailed, 8k resolution', label: '最高品質 (定番)' },
+                    { val: 'trending on artstation, sharp focus', label: 'ArtStation風 (プロ級)' }, { val: 'unreal engine 5 render, volumetric lighting', label: 'UE5風 (リアルCG)' }
+                ]
+            },
+            aspect: {
+                title: "アスペクト比", desc: "画面の縦横比を指定します。AIに合わせて自動変換されます。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: '--ar 1:1', label: '1:1 (正方形・アイコン用)' },
+                    { val: '--ar 16:9', label: '16:9 (横長・風景用)' }, { val: '--ar 9:16', label: '9:16 (縦長・スマホ画面用)' }, { val: '--ar 3:2', label: '3:2 (写真サイズ)' }
+                ]
+            },
+            background: {
+                title: "背景の扱い", desc: "元の画像にある背景をどう扱うかを指示します。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'keep', label: '参照画像の背景を維持する' }, { val: 'change', label: '選んだスタイルに合わせて新しく作る' }
+                ]
+            },
+            posture: {
+                title: "基本姿勢", desc: "キャラクターの全体的な姿勢を指定します。（全身描写用）",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'keep original posture from the reference image', label: '参照画像の姿勢を維持' },
+                    { val: 'standing pose, elegant posture', label: '立っている (立ち姿)' }, { val: 'sitting on a chair', label: '椅子に座っている' },
+                    { val: 'sitting on the floor, relaxed', label: '床に座っている' }, { val: 'dynamic action pose, in motion', label: '躍動的なアクション' }
+                ]
+            },
+            gesture: {
+                title: "ポーズ・可愛い仕草", desc: "顔周りや手元の具体的なポーズを指定します。",
+                options: [
+                    { val: '', label: '指定なし' }, { val: 'keep original pose from the reference image', label: '参照画像のポーズを維持' },
+                    { val: 'making a peace sign, v-sign', label: '✌️ ピースサイン' }, { val: 'finger heart gesture, cute', label: '🫰 指ハート' },
+                    { val: 'making a heart with hands', label: '🫶 両手でハート' }, { val: 'hand on cheek, cute pose', label: '😚 頬に手を当てる' },
+                    { val: 'chin resting on hands, cute charming pose', label: '🥺 あごのせポーズ' }, { val: 'hands on cheeks, blushing shy pose', label: '😳 照れポーズ (両手頬)' },
+                    { val: 'cat pose with hands, playful', label: '🐾 猫のポーズ' }, { val: 'winking and sticking tongue out', label: '😜 ウインク＆舌ぺろ' }
+                ]
+            }
+        };
+
+        let currentCategory = '';
+
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
-        function openInfoModal(title, dataId) {
-            document.getElementById('infoModalTitle').innerText = "📖 " + title;
-            document.getElementById('infoModalBody').innerHTML = document.getElementById(dataId).innerHTML;
-            openModal('infoModal');
-        }
-        window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) e.target.style.display = "none"; }
-
-        function resetForm() { if (confirm("リセットしますか？")) location.reload(); }
+        function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
 
         async function translateSubject() {
             const el = document.getElementById('main-subject');
             const txt = el.value.trim();
-            if (!txt) return alert("入力してください。");
+            if (!txt) return alert("被写体を入力してください。");
             const btn = document.getElementById('translate-btn');
             try {
-                btn.innerText = "⏳..."; btn.disabled = true;
+                btn.innerHTML = "⏳<br>翻訳中"; btn.disabled = true;
                 const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ja&tl=en&dt=t&q=${encodeURIComponent(txt)}`);
                 const data = await res.json();
                 if (data && data[0]) el.value = data[0].map(x => x[0]).join('');
                 generatePrompt();
-            } catch (e) { alert("失敗しました。"); } finally { btn.innerText = "🇬🇧 翻訳"; btn.disabled = false; }
+            } catch (e) { alert("翻訳に失敗しました。"); } finally { btn.innerHTML = "🇬🇧<br>翻訳"; btn.disabled = false; }
+        }
+
+        function openSelection(categoryKey) {
+            currentCategory = categoryKey;
+            const data = promptData[categoryKey];
+            
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalDesc').innerText = data.desc;
+            
+            const listDiv = document.getElementById('optionList');
+            listDiv.innerHTML = '';
+            
+            data.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn' + (state[categoryKey] === opt.val ? ' selected' : '');
+                btn.innerText = opt.label;
+                btn.onclick = () => selectOption(opt.val, opt.label);
+                listDiv.appendChild(btn);
+            });
+            openModal('selectionModal');
+        }
+
+        function selectOption(val, label) {
+            state[currentCategory] = val;
+            const cardValueDiv = document.getElementById(`val-${currentCategory}`);
+            cardValueDiv.innerText = label;
+            
+            const cardEl = cardValueDiv.parentElement;
+            if (val === '') {
+                cardValueDiv.classList.add('empty');
+                cardEl.classList.remove('has-value');
+            } else {
+                cardValueDiv.classList.remove('empty');
+                cardEl.classList.add('has-value');
+            }
+            closeModal('selectionModal');
+            
+            if (currentCategory === 'framing') {
+                const cardPosture = document.getElementById('card-posture');
+                const cardGesture = document.getElementById('card-gesture');
+                
+                if (val.includes('full body')) {
+                    cardPosture.classList.remove('hidden');
+                    cardGesture.classList.remove('hidden');
+                } else if (val !== '') {
+                    cardPosture.classList.add('hidden');
+                    cardGesture.classList.remove('hidden');
+                    state.posture = '';
+                    document.getElementById('val-posture').innerText = '指定なし';
+                    document.getElementById('val-posture').classList.add('empty');
+                    document.getElementById('card-posture').classList.remove('has-value');
+                } else {
+                    cardPosture.classList.add('hidden');
+                    cardGesture.classList.add('hidden');
+                    state.posture = ''; state.gesture = '';
+                    document.getElementById('val-posture').innerText = '指定なし';
+                    document.getElementById('val-gesture').innerText = '指定なし';
+                    document.getElementById('val-posture').classList.add('empty');
+                    document.getElementById('val-gesture').classList.add('empty');
+                    document.getElementById('card-posture').classList.remove('has-value');
+                    document.getElementById('card-gesture').classList.remove('has-value');
+                }
+            }
+            generatePrompt();
         }
 
         function generatePrompt() {
-            const tool = document.getElementById('generator-tool').value;
-            const vals = ['main-subject', 'proportion', 'medium', 'style', 'lighting', 'framing', 'camera', 'quality', 'aspect-ratio', 'background-handling'].reduce((acc, id) => {
-                acc[id] = document.getElementById(id).value.trim();
-                return acc;
-            }, {});
+            const subject = document.getElementById('main-subject').value.trim();
+            const t = state.tool;
+            
+            const translateBtn = document.getElementById('translate-btn');
+            const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(subject);
+            
+            if (hasJapanese) {
+                translateBtn.classList.add('needs-translation');
+            } else {
+                translateBtn.classList.remove('needs-translation');
+            }
 
             let bgp = "";
-            if (vals['background-handling'] === 'keep_original_background') bgp = (tool === 'midjourney' ? "keep original background" : "matching original image environment");
-            else if (vals['background-handling'] === 'change_to_style_background') bgp = "stylized new background";
+            if (state.background === 'keep') bgp = (t === 'midjourney' ? "keep original background" : "matching original image environment");
+            else if (state.background === 'change') bgp = "stylized new background";
 
+            let asp = state.aspect ? state.aspect.replace('--ar ', '') : '';
             let res = "";
-            if (tool === 'gemini' || tool === 'chatgpt') {
-                const parts = [vals['quality'], vals['framing'], vals['proportion'], bgp, vals['main-subject'], vals['medium'], vals['style'], vals['lighting'], vals['camera']].filter(i => i);
+            if (t === 'gemini' || t === 'chatgpt') {
+                const parts = [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera].filter(i => i);
                 res = parts.join(", ") + (parts.length ? "." : "");
-                if (vals['aspect-ratio']) res += ` Aspect ratio ${vals['aspect-ratio'].replace('--ar ', '')}.`;
-            } else if (tool === 'midjourney') {
-                const parts = [vals['framing'], vals['proportion'], bgp, vals['main-subject'], vals['medium'], vals['style'], vals['lighting'], vals['camera'], vals['quality']].filter(i => i);
-                res = parts.join(", ") + (vals['aspect-ratio'] ? " " + vals['aspect-ratio'] : "");
+                if (asp) res += ` Aspect ratio ${asp}.`;
+            } else if (t === 'midjourney') {
+                const parts = [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality].filter(i => i);
+                res = parts.join(", ") + (state.aspect ? " " + state.aspect : "");
             } else {
-                const parts = [vals['quality'], vals['framing'], vals['proportion'], bgp, vals['main-subject'], vals['medium'], vals['style'], vals['lighting'], vals['camera']].filter(i => i);
-                res = parts.join(", ") + (vals['aspect-ratio'] ? ", aspect ratio " + vals['aspect-ratio'].replace('--ar ', '') : "");
+                const parts = [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera].filter(i => i);
+                res = parts.join(", ") + (asp ? `, aspect ratio ${asp}` : "");
             }
             document.getElementById('output').value = res;
         }
 
         function copyPrompt() {
             const area = document.getElementById('output');
-            if (!area.value) return alert("内容がありません。");
+            if (!area.value) return alert("内容がありません。設定を選んでください。");
+            
+            const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(area.value);
+            if (hasJapanese) {
+                if (!confirm("⚠️ プロンプトに日本語が含まれています。\nAIによっては上手く生成されない場合があります。\n\n翻訳せずにこのままコピーしますか？")) {
+                    return;
+                }
+            }
+
             area.select();
             area.setSelectionRange(0, 99999);
-            
             if (document.execCommand("copy")) {
-                const tool = document.getElementById('generator-tool').value;
+                const t = state.tool;
                 let appName = "";
-                if (tool === 'gemini') appName = "Gemini";
-                else if (tool === 'chatgpt') appName = "ChatGPT";
-                else if (tool === 'midjourney') appName = "Discord (Midjourney)";
+                if (t === 'gemini') appName = "Gemini";
+                else if (t === 'chatgpt') appName = "ChatGPT";
+                else if (t === 'midjourney') appName = "Discord (Midjourney)";
                 else appName = "Stable Diffusion";
                 
-                alert(`✅ コピー完了！\n\nスマホのホーム画面やタスク切り替えから【 ${appName} 】を開いて、参照画像と一緒に貼り付けてください。`);
+                alert(`✅ コピー完了！\n\nスマホのホーム画面やタスク画面から【 ${appName} 】を開いて、参照画像と一緒にプロンプトを貼り付けてください。`);
             }
         }
-        window.onload = generatePrompt;
+        
+        window.onload = function() {
+            generatePrompt();
+        };
     </script>
 </body>
 </html>

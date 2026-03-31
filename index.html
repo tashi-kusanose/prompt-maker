@@ -14,13 +14,13 @@
         .how-to-open-btn { background-color: #eaf2f8; color: #2980b9; border: 2px solid #3498db; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 15px; transition: all 0.2s; }
         .how-to-open-btn:hover { background-color: #3498db; color: white; }
 
-        /* モーダル背景 */
+        /* ポップアップ（モーダル）の背景 */
         .modal-overlay {
             display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(2px);
         }
 
-        /* モーダルコンテンツ */
+        /* ポップアップの中身 */
         .modal-content {
             background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 8px;
             width: 90%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -32,6 +32,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* 閉じるボタン */
         .close-btn { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
         .close-btn:hover { color: #333; }
 
@@ -39,15 +40,16 @@
         .modal-content ol { padding-left: 20px; color: #444; font-size: 15px; }
         .modal-content li { margin-bottom: 12px; }
         
+        /* インフォモーダル内のテキストスタイル */
         .info-modal-text { font-size: 14px; color: #444; }
         .info-modal-text ul { margin: 10px 0 0 0; padding-left: 20px; }
         .info-modal-text li { margin-bottom: 8px; }
 
         .section { margin-bottom: 25px; }
 
-        /* ラベルとアイコンを横並びにするための設定 */
+        /* ラベルとアイコンを横並びにする（フォーカス防止） */
         .label-row { display: flex; align-items: center; margin-bottom: 8px; }
-        label { font-weight: bold; color: #2c3e50; margin-bottom: 0; cursor: pointer; }
+        label { font-weight: bold; color: #2c3e50; margin-bottom: 0; }
         
         .info-icon { 
             cursor: pointer; margin-left: 10px; font-size: 12px; color: #fff; 
@@ -87,11 +89,11 @@
             <span class="close-btn" onclick="closeModal('howToModal')">&times;</span>
             <h2>📖 このツールの使い方</h2>
             <ol>
-                <li><b>使うAIツールを選ぶ:</b><br>「0. 生成ツールの選択」からAIを選びます。</li>
-                <li><b>日本語で被写体を書く:</b><br>「1. 被写体の説明」に入力します。画像参照メインの場合は<b>空欄でもOK</b>です。</li>
-                <li><b>英語に翻訳する:</b><br>「🇬🇧 英語に翻訳」ボタンを押します。</li>
-                <li><b>オプションを選ぶ:</b><br>2〜10から好みの設定を選択します（「❓」で解説が見れます）。</li>
-                <li><b>使いたい画像と一緒に貼り付ける:</b><br>コピーしたプロンプトを、参照画像と一緒にAIに送信してください。</li>
+                <li><b>使うAIツールを選ぶ:</b><br>「0. 生成ツールの選択」から、実際に使用するAIを選びます。</li>
+                <li><b>日本語で被写体を書く:</b><br>「1. 被写体の説明」の入力欄に、描きたいものを日本語で入力します。画像参照メインの場合は<b>空欄でもOK</b>です。</li>
+                <li><b>英語に翻訳する:</b><br>入力欄の右にある「🇬🇧 英語に翻訳」ボタンを押します。</li>
+                <li><b>オプションを選ぶ:</b><br>2〜10のプルダウンメニューから、好みの画風やアングルを選択します（「❓」ボタンで各項目の詳細が見れます）。</li>
+                <li><b>使いたい画像と一緒に貼り付ける:</b><br>一番下の「プロンプトをコピーする」ボタンを押してコピーし、ベースとして使いたい参照画像と一緒に、ご利用の画像生成AIに貼り付けて送信してください！</li>
             </ol>
         </div>
     </div>
@@ -108,40 +110,92 @@
         <div id="data-tool">
             AIごとに適したプロンプトの形式が異なります。
             <ul>
-                <li><b>Midjourney</b>: 単語をカンマ区切り。末尾に--arを付与。</li>
-                <li><b>Gemini / ChatGPT</b>: 自然な英文。</li>
-                <li><b>Stable Diffusion</b>: 品質タグを先頭に配置。</li>
+                <li><b>Midjourney</b>: 芸術的な表現に強い。単語をカンマで区切り、末尾にアスペクト比(--ar)を自動付与します。</li>
+                <li><b>Gemini</b>: Googleの最新モデル。自然な文章での指示が得意です。</li>
+                <li><b>ChatGPT (DALL-E 3)</b>: 指示の忠実度が高い。1つの英文として繋ぎます。</li>
+                <li><b>Stable Diffusion</b>: 自由度が高い。品質タグ（Masterpiece等）を先頭に配置します。</li>
             </ul>
         </div>
         <div id="data-subject">
             画像に描きたいメインの対象です。画像を参照して生成する場合、<b>被写体の説明は未入力（空欄）でも問題ありません。</b>その場合は、AIが画像の内容と選択されたスタイルから自動的に判断します。
         </div>
         <div id="data-proportion">
-            キャラクターのサイズ感や頭身を指定します。
+            キャラクターのサイズ感や等身（デフォルメ具合）を指定します。
+            <ul>
+                <li><b>ちびキャラ (SDキャラ)</b>: 2〜3頭身の小柄で可愛らしい体型。大きな目が特徴です。</li>
+                <li><b>高頭身・モデル体型</b>: 8頭身以上のすらっとした大人びた体型。</li>
+            </ul>
         </div>
         <div id="data-medium">
-            写真、アニメ、油絵、3Dなど、画像全体の土台を決定します。
+            画像全体の基本的な表現手法を決定します。
+            <ul>
+                <li><b>実写写真</b>: まるでカメラで撮影したかのようなリアルな表現。</li>
+                <li><b>アニメ・イラスト</b>: 2Dのセル画風アニメや、鮮やかなイラスト表現。</li>
+                <li><b>油絵・伝統絵画</b>: ゴッホやモネのような筆致、クラシックな絵画風。</li>
+                <li><b>水彩画</b>: にじみや透明感のある、柔らかく優しい表現。</li>
+                <li><b>3Dレンダー</b>: ゲームCGのような立体的で滑らかな表現。</li>
+                <li><b>鉛筆画・線画</b>: 精密なデッサンやラフスケッチ風。</li>
+            </ul>
         </div>
         <div id="data-style">
-            サイバーパンクやポップアートなど、世界観を付加します。
+            作品の世界観や特定の芸術的な雰囲気を付加します。
+            <ul>
+                <li><b>サイバーパンク</b>: ネオンサイン、機械化された未来都市。</li>
+                <li><b>スチームパンク</b>: 歯車、真鍮、蒸気機関のレトロフューチャー。</li>
+                <li><b>ダークファンタジー</b>: ゴシック調、怪物、暗く重厚な魔法世界。</li>
+                <li><b>ポップアート</b>: 原色を多用した派手で現代的なアート。</li>
+                <li><b>ミニマリズム</b>: 要素を極限まで減らしたシンプルな美しさ。</li>
+                <li><b>レトロ・ヴィンテージ</b>: 昔のポスターのような懐かしい雰囲気。</li>
+            </ul>
         </div>
         <div id="data-lighting">
             光の当たり方を指定します。
+            <ul>
+                <li><b>シネマティック</b>: 映画のような、ドラマチックで明暗のはっきりした光。</li>
+                <li><b>自然光・夕暮れ</b>: 太陽の温かく柔らかい光。</li>
+                <li><b>スタジオ照明</b>: 被写体を綺麗に魅せる計算された均一な光。</li>
+                <li><b>ネオン・ムーディー</b>: 暗闇に浮かぶネオン管の怪しげな光。</li>
+            </ul>
         </div>
         <div id="data-framing">
-            全身、上半身、バストアップなど描画範囲を指定します。
+            人物をどの範囲まで描画するかを指定します。
+            <ul>
+                <li><b>指定なし</b>: 参照画像の構図を活かします。</li>
+                <li><b>全身</b>: 頭の先から足元まで全体を描写します。</li>
+                <li><b>上半身</b>: 腰から上の構図です。</li>
+                <li><b>バストアップ</b>: 胸から上の、顔の表情を強調する構図です。</li>
+            </ul>
         </div>
         <div id="data-camera">
-            俯瞰やあおりなど、カメラアングルを指定します。
+            被写体をどの角度から撮影するか指定します。
+            <ul>
+                <li><b>広角・パノラマ</b>: 背景を広く入れたい時に。</li>
+                <li><b>俯瞰・ハイアングル</b>: 上空から見下ろす視点。</li>
+                <li><b>あおり・ローアングル</b>: 下から見上げる視点。威風堂々と見せたい時に。</li>
+            </ul>
         </div>
         <div id="data-quality">
-            高画質・高精細にするための追加キーワードです。
+            AIに高画質・高精細に描かせるための追加キーワードです。
+            <ul>
+                <li><b>最高品質 (8K)</b>: 解像感や完成度を底上げする定番の呪文。</li>
+                <li><b>ArtStation風</b>: プロのアーティストのような洗練された塗りと構図。</li>
+                <li><b>UE5・美麗CG風</b>: リアルな光の反射や空気感を強調。</li>
+            </ul>
         </div>
         <div id="data-aspect">
-            画像の縦横比です。
+            画像の縦横比です。選択したAIツールに合わせて、最適な形式で反映されます。
+            <ul>
+                <li><b>16:9</b>: 横長。風景やシネマティックな構図に。</li>
+                <li><b>9:16</b>: 縦長。スマホの全画面や立ち絵に。</li>
+                <li><b>3:2 / 2:3</b>: 標準的な写真サイズ。</li>
+            </ul>
         </div>
         <div id="data-background">
-            参照画像の背景を活かすか、スタイルに合わせて一新するかを選べます。
+            参照画像の背景をどう扱うかを指定します。
+            <ul>
+                <li><b>背景を維持</b>: 元の画像にある背景要素をできるだけ残します。</li>
+                <li><b>スタイルに合わせる</b>: 選択した「画風・スタイル」に関連する背景を自動生成します。</li>
+            </ul>
         </div>
     </div>
 
@@ -258,8 +312,8 @@
             </div>
             <div>
                 <div class="label-row">
-                    <label for="quality">8. 品質呪文</label>
-                    <span class="info-icon" onclick="openInfoModal('8. 品質呪文', 'data-quality')">❓</span>
+                    <label for="quality">8. 品質</label>
+                    <span class="info-icon" onclick="openInfoModal('8. 品質', 'data-quality')">❓</span>
                 </div>
                 <select id="quality" onchange="generatePrompt()">
                     <option value="">指定なし</option>
@@ -306,11 +360,13 @@
         // ポップアップ制御
         function openModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
+        
         function openInfoModal(title, contentId) {
             document.getElementById('infoModalTitle').innerText = "📖 " + title;
             document.getElementById('infoModalBody').innerHTML = document.getElementById(contentId).innerHTML;
             openModal('infoModal');
         }
+
         window.onclick = function(event) { if (event.target.classList.contains('modal-overlay')) { event.target.style.display = "none"; } }
 
         function resetForm() {

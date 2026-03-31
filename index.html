@@ -73,9 +73,9 @@
         <div id="data-style">世界観を付加します。<ul><li><b>サイバーパンク</b>: ネオン、未来都市。</li><li><b>スチームパンク</b>: 歯車、蒸気機関。</li><li><b>ダークファンタジー</b>: 重厚な魔法世界。</li><li><b>ポップアート</b>: 派手で現代的なアート。</li><li><b>ミニマリズム</b>: シンプルな美しさ。</li><li><b>レトロ</b>: 懐かしい雰囲気。</li></ul></div>
         <div id="data-lighting">光の当たり方です。<ul><li><b>シネマティック</b>: ドラマチックな明暗。</li><li><b>自然光</b>: 柔らかい陽射し。</li><li><b>スタジオ照明</b>: 均一で綺麗な光。</li><li><b>ネオン</b>: 雰囲気のある光。</li></ul></div>
         <div id="data-framing">人物の映る範囲です。<ul><li><b>全身</b>: 頭から足元まで全体。</li><li><b>上半身</b>: 腰から上。</li><li><b>バストアップ</b>: 胸から上（表情強調）。</li></ul></div>
-        <div id="data-camera">撮影角度です。<ul><li><b>広角</b>: 背景を広く入れたい時。</li><li><b>俯瞰</b>: 上から見下ろす視点。</li><li><b>あおり</b>: 下から見上げる視点。</li></ul></div>
+        <div id="data-camera">撮影角度です。<ul><li><b>広角</b>: 背景を広く入れた時。</li><li><b>俯瞰</b>: 上から見下ろす視点。</li><li><b>あおり</b>: 下から見上げる視点。</li></ul></div>
         <div id="data-quality">高画質・高精細にするための呪文です。<ul><li><b>最高品質</b>: 全体的な完成度を底上げします。</li><li><b>ArtStation風</b>: プロのような洗練された塗りと構図。</li><li><b>UE5風</b>: リアルな光や空気感を強調。</li></ul></div>
-        <div id="data-aspect">画像の縦横比です。AIツールに合わせて最適なパラメータに変換されます。</div>
+        <div id="data-aspect">画像の縦横比です。AIツールに合わせて最適なパラメータに変換されます。<ul><li><b>1:1</b>: 正方形。SNSのアイコンなどに最適です。</li><li><b>16:9</b>: 横長。風景や映画風に。</li><li><b>9:16</b>: 縦長。スマホ全画面や立ち絵に。</li><li><b>3:2 / 2:3</b>: 標準的な写真サイズ。</li></ul></div>
         <div id="data-background">背景を元の画像に合わせるか、選んだスタイルに合わせて新しく作るかを選べます。</div>
     </div>
 
@@ -110,7 +110,7 @@
             <div><div class="label-row"><label>6. フレーミング</label><span class="info-icon" onclick="openInfoModal('フレーミング', 'data-framing')">❓</span></div><select id="framing" onchange="generatePrompt()"><option value="">指定なし</option><option value="full body shot">全身</option><option value="upper body shot">上半身</option><option value="bust-up shot">バストアップ</option></select></div>
             <div><div class="label-row"><label>7. アングル</label><span class="info-icon" onclick="openInfoModal('アングル', 'data-camera')">❓</span></div><select id="camera" onchange="generatePrompt()"><option value="">指定なし</option><option value="wide angle">広角</option><option value="from above, high angle">俯瞰</option><option value="from below, low angle">あおり</option></select></div>
             <div><div class="label-row"><label>8. 品質</label><span class="info-icon" onclick="openInfoModal('品質', 'data-quality')">❓</span></div><select id="quality" onchange="generatePrompt()"><option value="">指定なし</option><option value="masterpiece, highly detailed, 8k resolution">最高品質</option><option value="trending on artstation, sharp focus">ArtStation風</option></select></div>
-            <div><div class="label-row"><label>9. アスペクト比</label><span class="info-icon" onclick="openInfoModal('アスペクト比', 'data-aspect')">❓</span></div><select id="aspect-ratio" onchange="generatePrompt()"><option value="">指定なし</option><option value="--ar 16:9">16:9 (横長)</option><option value="--ar 9:16">9:16 (縦長)</option><option value="--ar 3:2">3:2</option></select></div>
+            <div><div class="label-row"><label>9. アスペクト比</label><span class="info-icon" onclick="openInfoModal('アスペクト比', 'data-aspect')">❓</span></div><select id="aspect-ratio" onchange="generatePrompt()"><option value="">指定なし</option><option value="--ar 1:1">1:1 (正方形)</option><option value="--ar 16:9">16:9 (横長)</option><option value="--ar 9:16">9:16 (縦長)</option><option value="--ar 3:2">3:2</option></select></div>
             <div><div class="label-row"><label>10. 背景の扱い</label><span class="info-icon" onclick="openInfoModal('背景の扱い', 'data-background')">❓</span></div><select id="background-handling" onchange="generatePrompt()"><option value="">指定なし</option><option value="keep_original_background">背景維持</option><option value="change_to_style_background">スタイルに合わせる</option></select></div>
         </div>
 

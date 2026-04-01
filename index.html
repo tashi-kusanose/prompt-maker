@@ -271,7 +271,6 @@
                     { val: 'cat pose with hands, playful', label: '🐾 猫のポーズ' }, { val: 'winking and sticking tongue out', label: '😜 ウインク＆舌ぺろ' }
                 ]
             },
-            // 🌟 追加項目：キャラクターの画風（シーンモード用）
             characterStyle: {
                 title: "キャラクターの画風", desc: "シーンに登場する人物のテイストを指定します。",
                 options: [
@@ -302,7 +301,6 @@
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
 
-        // タブ切り替え
         function switchMode(mode) {
             currentMode = mode;
             const btnInd = document.getElementById('btn-mode-individual');
@@ -315,7 +313,6 @@
                 btnSce.classList.remove('active');
                 gridInd.classList.remove('hidden');
                 gridSce.classList.add('hidden');
-                // シーンモードの項目をリセット
                 updateStateAndUI('scene', '', '指定なし');
                 updateStateAndUI('characterStyle', '', '指定なし');
             } else {
@@ -323,7 +320,6 @@
                 btnInd.classList.remove('active');
                 gridSce.classList.remove('hidden');
                 gridInd.classList.add('hidden');
-                // 個別設定をリセット
                 const indKeys = ['proportion', 'medium', 'style', 'lighting', 'framing', 'camera', 'posture', 'gesture'];
                 indKeys.forEach(k => updateStateAndUI(k, '', '指定なし'));
                 document.getElementById('card-posture').classList.add('hidden');
@@ -432,6 +428,11 @@
                 res = filtered.join(", ") + (filtered.length ? "." : "");
                 if (asp) res += ` Aspect ratio ${asp}.`;
                 
+                // 🌟 ChatGPT選択時は必ず画像生成を実行させる指示を追加
+                if (t === 'chatgpt') {
+                    res = "必ず画像生成を実行してください。\n" + res;
+                }
+                
             } else if (t === 'midjourney') {
                 const parts = currentMode === 'individual'
                     ? [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality]
@@ -465,7 +466,7 @@
             if (document.execCommand("copy")) {
                 const t = state.tool;
                 let appName = t === 'gemini' ? "Gemini" : t === 'chatgpt' ? "ChatGPT" : t === 'midjourney' ? "Discord (Midjourney)" : "Stable Diffusion";
-                alert(`✅ コピー完了！\n\nスマホのホーム画面やタスク画面から【 ${appName} 】を開いて、参照画像と一緒にプロンプトを貼り付けてください。`);
+                alert(`✅ コピー完了！\n\nスマホのタスク画面等から【 ${appName} 】を開いて、参照画像と一緒にプロンプトを貼り付けてください。`);
             }
         }
         

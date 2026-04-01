@@ -90,7 +90,7 @@
             <ol style="color: #444; line-height: 1.7;">
                 <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
                 <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
-                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（シーンモードでは画風も選べます！）</li>
+                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -428,9 +428,9 @@
                 res = filtered.join(", ") + (filtered.length ? "." : "");
                 if (asp) res += ` Aspect ratio ${asp}.`;
                 
-                // 🌟 ChatGPT選択時は必ず画像生成を実行させる指示を追加
+                // 🌟 ChatGPT選択時は必ず画像生成を実行させる指示を追加（英語に変更済み）
                 if (t === 'chatgpt') {
-                    res = "必ず画像生成を実行してください。\n" + res;
+                    res = "You MUST generate an image.\n" + res;
                 }
                 
             } else if (t === 'midjourney') {
@@ -456,6 +456,7 @@
             const area = document.getElementById('output');
             if (!area.value) return alert("内容がありません。設定を選んでください。");
             
+            // 🌟 エラーポップアップが誤作動しないように、日本語チェック機能はそのまま保持
             const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(area.value);
             if (hasJapanese) {
                 if (!confirm("⚠️ プロンプトに日本語が含まれています。\nAIによっては上手く生成されない場合があります。\n\n翻訳せずにこのままコピーしますか？")) return;

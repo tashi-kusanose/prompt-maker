@@ -32,6 +32,11 @@
         }
         .translate-btn.needs-translation { background-color: var(--danger); animation: pulseAlert 1.5s infinite; }
 
+        /* 🌟 モード切替タブ（2択） */
+        .mode-toggle { display: flex; background: #eaf2f8; padding: 6px; border-radius: 12px; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .mode-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; background: transparent; color: #7f8c8d; }
+        .mode-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
         @media (min-width: 600px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
         
@@ -83,10 +88,9 @@
                 <h2 class="modal-title">📖 使い方ガイド</h2>
             </div>
             <ol style="color: #444; line-height: 1.7;">
-                <li><b>被写体を入力:</b> 「1. 被写体」に描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
-                <li><b>ツールを選択:</b> 「2. オプション設定」の左上にある「0. 生成ツール」カードをタップして、使うAIを選びます。</li>
-                <li><b>オプションを選ぶ:</b> その他のカードをタップして、好みの画風やアングルなどを設定します。</li>
-                <li><b>ポーズの追加:</b> 「6. フレーミング」で「全身」や「上半身」を選ぶと、専用のポーズ設定カードが出現します。</li>
+                <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
+                <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
+                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（フレーミングで全身を選ぶとポーズが追加されます）</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -118,20 +122,41 @@
 
         <div class="section">
             <div class="section-title">2. オプション設定</div>
-            <div class="grid">
-                <div class="category-card" onclick="openSelection('tool')"><span class="card-icon">🤖</span><div class="card-label">0. 生成ツール</div><div class="card-value" id="val-tool">Gemini</div></div>
-                <div class="category-card" onclick="openSelection('proportion')"><span class="card-icon">📏</span><div class="card-label">2. 頭身・体型</div><div class="card-value empty" id="val-proportion">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('medium')"><span class="card-icon">🖌️</span><div class="card-label">3. ベースの画風</div><div class="card-value empty" id="val-medium">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('style')"><span class="card-icon">🎭</span><div class="card-label">4. アートスタイル</div><div class="card-value empty" id="val-style">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('lighting')"><span class="card-icon">💡</span><div class="card-label">5. 照明</div><div class="card-value empty" id="val-lighting">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('framing')"><span class="card-icon">📸</span><div class="card-label">6. フレーミング</div><div class="card-value empty" id="val-framing">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('camera')"><span class="card-icon">🎥</span><div class="card-label">7. アングル</div><div class="card-value empty" id="val-camera">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('quality')"><span class="card-icon">✨</span><div class="card-label">8. 品質</div><div class="card-value empty" id="val-quality">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('aspect')"><span class="card-icon">📱</span><div class="card-label">9. アスペクト比</div><div class="card-value empty" id="val-aspect">指定なし</div></div>
-                <div class="category-card" onclick="openSelection('background')"><span class="card-icon">🏞️</span><div class="card-label">10. 背景の扱い</div><div class="card-value empty" id="val-background">指定なし</div></div>
+            
+            <div class="grid" style="margin-bottom: 20px;">
+                <div class="category-card" onclick="openSelection('tool')">
+                    <span class="card-icon">🤖</span><div class="card-label">0. 生成ツール</div><div class="card-value" id="val-tool">Gemini</div>
+                </div>
+            </div>
+
+            <div class="mode-toggle">
+                <button id="btn-mode-individual" class="mode-btn active" onclick="switchMode('individual')">🎛️ 個別に細かく設定</button>
+                <button id="btn-mode-scene" class="mode-btn" onclick="switchMode('scene')">🎬 シーンで一括指定</button>
+            </div>
+
+            <div id="grid-individual" class="grid" style="margin-bottom: 25px;">
+                <div class="category-card" onclick="openSelection('proportion')"><span class="card-icon">📏</span><div class="card-label">頭身・体型</div><div class="card-value empty" id="val-proportion">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('medium')"><span class="card-icon">🖌️</span><div class="card-label">ベースの画風</div><div class="card-value empty" id="val-medium">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('style')"><span class="card-icon">🎭</span><div class="card-label">アートスタイル</div><div class="card-value empty" id="val-style">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('lighting')"><span class="card-icon">💡</span><div class="card-label">照明</div><div class="card-value empty" id="val-lighting">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('framing')"><span class="card-icon">📸</span><div class="card-label">フレーミング</div><div class="card-value empty" id="val-framing">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('camera')"><span class="card-icon">🎥</span><div class="card-label">アングル</div><div class="card-value empty" id="val-camera">指定なし</div></div>
                 
-                <div id="card-posture" class="category-card hidden" onclick="openSelection('posture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">🧍</span><div class="card-label" style="color: #9b59b6;">11. 基本姿勢</div><div class="card-value empty" id="val-posture">指定なし</div></div>
-                <div id="card-gesture" class="category-card hidden" onclick="openSelection('gesture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">✌️</span><div class="card-label" style="color: #9b59b6;">12. ポーズ・仕草</div><div class="card-value empty" id="val-gesture">指定なし</div></div>
+                <div id="card-posture" class="category-card hidden" onclick="openSelection('posture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">🧍</span><div class="card-label" style="color: #9b59b6;">基本姿勢</div><div class="card-value empty" id="val-posture">指定なし</div></div>
+                <div id="card-gesture" class="category-card hidden" onclick="openSelection('gesture')" style="border-color: #e8dff5; background-color: #fffafc;"><span class="card-icon">✌️</span><div class="card-label" style="color: #9b59b6;">ポーズ・仕草</div><div class="card-value empty" id="val-gesture">指定なし</div></div>
+            </div>
+
+            <div id="grid-scene" class="grid hidden" style="margin-bottom: 25px;">
+                <div class="category-card" onclick="openSelection('scene')" style="grid-column: 1 / -1; border-color: #f39c12; background-color: #fffaf0;">
+                    <span class="card-icon">🎬</span><div class="card-label" style="color: #e67e22;">シーン・シチュエーション</div><div class="card-value empty" id="val-scene">指定なし</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="font-size: 0.95rem; color: #7f8c8d; border-left-color: #bdc3c7; margin-top: 10px;">共通設定 (どちらのモードでも適用)</div>
+            <div class="grid">
+                <div class="category-card" onclick="openSelection('quality')"><span class="card-icon">✨</span><div class="card-label">品質</div><div class="card-value empty" id="val-quality">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('aspect')"><span class="card-icon">📱</span><div class="card-label">アスペクト比</div><div class="card-value empty" id="val-aspect">指定なし</div></div>
+                <div class="category-card" onclick="openSelection('background')"><span class="card-icon">🏞️</span><div class="card-label">背景の扱い</div><div class="card-value empty" id="val-background">指定なし</div></div>
             </div>
         </div>
 
@@ -146,7 +171,8 @@
     </div>
 
     <script>
-        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '' };
+        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '', scene: '' };
+        let currentMode = 'individual'; // 'individual' or 'scene'
 
         const promptData = {
             tool: {
@@ -159,7 +185,7 @@
             proportion: {
                 title: "頭身・体型", desc: "キャラクターのデフォルメ具合やスタイルを指定します。",
                 options: [
-                    { val: '', label: '指定なし (画像にお任せ)' },
+                    { val: '', label: '指定なし' },
                     { val: 'chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes', label: 'ちびキャラ・SDキャラ' },
                     { val: 'tall stature, 8 heads tall, model proportions, long legs', label: '高頭身・モデル体型' }
                 ]
@@ -193,7 +219,7 @@
             framing: {
                 title: "フレーミング", desc: "人物がカメラに映る範囲を指定します。※「全身」「上半身」を選ぶとポーズ設定が追加されます。",
                 options: [
-                    { val: '', label: '指定なし (画像構図を維持)' }, { val: 'full body shot, showing entire body', label: '全身' },
+                    { val: '', label: '指定なし' }, { val: 'full body shot, showing entire body', label: '全身' },
                     { val: 'upper body shot, from waist up', label: '上半身' }, { val: 'bust-up shot, close-up on face', label: 'バストアップ' }
                 ]
             },
@@ -212,16 +238,16 @@
                 ]
             },
             aspect: {
-                title: "アスペクト比", desc: "画面の縦横比を指定します。AIに合わせて自動変換されます。",
+                title: "アスペクト比", desc: "画面の縦横比を指定します。",
                 options: [
                     { val: '', label: '指定なし' }, { val: '--ar 1:1', label: '1:1 (正方形・アイコン用)' },
-                    { val: '--ar 16:9', label: '16:9 (横長・風景用)' }, { val: '--ar 9:16', label: '9:16 (縦長・スマホ画面用)' }, { val: '--ar 3:2', label: '3:2 (写真サイズ)' }
+                    { val: '--ar 16:9', label: '16:9 (横長・風景用)' }, { val: '--ar 9:16', label: '9:16 (縦長・スマホ用)' }, { val: '--ar 3:2', label: '3:2 (写真サイズ)' }
                 ]
             },
             background: {
                 title: "背景の扱い", desc: "元の画像にある背景をどう扱うかを指示します。",
                 options: [
-                    { val: '', label: '指定なし' }, { val: 'keep', label: '参照画像の背景を維持する' }, { val: 'change', label: '選んだスタイルに合わせて新しく作る' }
+                    { val: '', label: '指定なし' }, { val: 'keep', label: '参照画像の背景を維持する' }, { val: 'change', label: 'スタイルに合わせて新しく作る' }
                 ]
             },
             posture: {
@@ -241,6 +267,19 @@
                     { val: 'chin resting on hands, cute charming pose', label: '🥺 あごのせポーズ' }, { val: 'hands on cheeks, blushing shy pose', label: '😳 照れポーズ (両手頬)' },
                     { val: 'cat pose with hands, playful', label: '🐾 猫のポーズ' }, { val: 'winking and sticking tongue out', label: '😜 ウインク＆舌ぺろ' }
                 ]
+            },
+            scene: {
+                title: "シーン・シチュエーション", desc: "スタイルや照明、背景などをまとめて指定し、特定の場面を一括で再現します。",
+                options: [
+                    { val: '', label: '指定なし (個別設定を使用)' },
+                    { val: 'live house setting, stage lighting, spot light, enthusiastic crowd in background, rock concert atmosphere', label: '🎤 ライブハウスで熱唱' },
+                    { val: 'wedding ceremony setting, elegant white wedding dress, bouquet, soft ethereal lighting, church background, romantic atmosphere', label: '💍 結婚式のウエディングドレス' },
+                    { val: 'cyberpunk city street, neon rain, futuristic night scenery, crowded street, glowing holographic signs, dark atmosphere', label: '🌃 サイバーパンク都市' },
+                    { val: 'enchanted forest setting, magical atmosphere, ancient ruins, glowing bioluminescent plants, mystical light', label: '🌲 神秘的なファンタジーの森' },
+                    { val: 'retro Japanese kissaten setting, Showa period aesthetic, nostalgic atmosphere, table with coffee, cozy bokeh', label: '☕ レトロな純喫茶' },
+                    { val: 'after school classroom, golden hour, sunlight streaming through window, nostalgic atmosphere, school desk and chair', label: '🌇 放課後の教室' },
+                    { val: 'tropical beach at sunset, golden hour lighting, silhouette of palm trees, ocean waves', label: '🏝️ 夕暮れのビーチ' }
+                ]
             }
         };
 
@@ -249,6 +288,51 @@
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
+
+        // 🌟 タブ切り替え機能
+        function switchMode(mode) {
+            currentMode = mode;
+            const btnInd = document.getElementById('btn-mode-individual');
+            const btnSce = document.getElementById('btn-mode-scene');
+            const gridInd = document.getElementById('grid-individual');
+            const gridSce = document.getElementById('grid-scene');
+
+            if (mode === 'individual') {
+                btnInd.classList.add('active');
+                btnSce.classList.remove('active');
+                gridInd.classList.remove('hidden');
+                gridSce.classList.add('hidden');
+                // シーンをリセット
+                updateStateAndUI('scene', '', '指定なし');
+            } else {
+                btnSce.classList.add('active');
+                btnInd.classList.remove('active');
+                gridSce.classList.remove('hidden');
+                gridInd.classList.add('hidden');
+                // 個別設定をリセット
+                const indKeys = ['proportion', 'medium', 'style', 'lighting', 'framing', 'camera', 'posture', 'gesture'];
+                indKeys.forEach(k => updateStateAndUI(k, '', '指定なし'));
+                document.getElementById('card-posture').classList.add('hidden');
+                document.getElementById('card-gesture').classList.add('hidden');
+            }
+            generatePrompt();
+        }
+
+        function updateStateAndUI(category, val, label) {
+            state[category] = val;
+            const cardValueDiv = document.getElementById(`val-${category}`);
+            if(!cardValueDiv) return;
+            cardValueDiv.innerText = label;
+            
+            const cardEl = cardValueDiv.parentElement;
+            if (val === '') {
+                cardValueDiv.classList.add('empty');
+                cardEl.classList.remove('has-value');
+            } else {
+                cardValueDiv.classList.remove('empty');
+                cardEl.classList.add('has-value');
+            }
+        }
 
         async function translateSubject() {
             const el = document.getElementById('main-subject');
@@ -285,20 +369,10 @@
         }
 
         function selectOption(val, label) {
-            state[currentCategory] = val;
-            const cardValueDiv = document.getElementById(`val-${currentCategory}`);
-            cardValueDiv.innerText = label;
-            
-            const cardEl = cardValueDiv.parentElement;
-            if (val === '') {
-                cardValueDiv.classList.add('empty');
-                cardEl.classList.remove('has-value');
-            } else {
-                cardValueDiv.classList.remove('empty');
-                cardEl.classList.add('has-value');
-            }
+            updateStateAndUI(currentCategory, val, label);
             closeModal('selectionModal');
             
+            // フレーミングによるポーズ連動
             if (currentCategory === 'framing') {
                 const cardPosture = document.getElementById('card-posture');
                 const cardGesture = document.getElementById('card-gesture');
@@ -309,20 +383,12 @@
                 } else if (val !== '') {
                     cardPosture.classList.add('hidden');
                     cardGesture.classList.remove('hidden');
-                    state.posture = '';
-                    document.getElementById('val-posture').innerText = '指定なし';
-                    document.getElementById('val-posture').classList.add('empty');
-                    document.getElementById('card-posture').classList.remove('has-value');
+                    updateStateAndUI('posture', '', '指定なし');
                 } else {
                     cardPosture.classList.add('hidden');
                     cardGesture.classList.add('hidden');
-                    state.posture = ''; state.gesture = '';
-                    document.getElementById('val-posture').innerText = '指定なし';
-                    document.getElementById('val-gesture').innerText = '指定なし';
-                    document.getElementById('val-posture').classList.add('empty');
-                    document.getElementById('val-gesture').classList.add('empty');
-                    document.getElementById('card-posture').classList.remove('has-value');
-                    document.getElementById('card-gesture').classList.remove('has-value');
+                    updateStateAndUI('posture', '', '指定なし');
+                    updateStateAndUI('gesture', '', '指定なし');
                 }
             }
             generatePrompt();
@@ -332,31 +398,45 @@
             const subject = document.getElementById('main-subject').value.trim();
             const t = state.tool;
             
+            // 日本語チェック
             const translateBtn = document.getElementById('translate-btn');
             const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(subject);
-            
-            if (hasJapanese) {
-                translateBtn.classList.add('needs-translation');
-            } else {
-                translateBtn.classList.remove('needs-translation');
-            }
+            if (hasJapanese) translateBtn.classList.add('needs-translation');
+            else translateBtn.classList.remove('needs-translation');
 
+            // 背景プロンプト
             let bgp = "";
             if (state.background === 'keep') bgp = (t === 'midjourney' ? "keep original background" : "matching original image environment");
             else if (state.background === 'change') bgp = "stylized new background";
 
             let asp = state.aspect ? state.aspect.replace('--ar ', '') : '';
             let res = "";
+            
+            // モードに応じたプロンプト生成
             if (t === 'gemini' || t === 'chatgpt') {
-                const parts = [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera].filter(i => i);
-                res = parts.join(", ") + (parts.length ? "." : "");
+                const parts = currentMode === 'individual' 
+                    ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
+                    : [state.quality, bgp, state.scene, subject];
+                
+                let filtered = parts.filter(i => i);
+                res = filtered.join(", ") + (filtered.length ? "." : "");
                 if (asp) res += ` Aspect ratio ${asp}.`;
+                
             } else if (t === 'midjourney') {
-                const parts = [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality].filter(i => i);
-                res = parts.join(", ") + (state.aspect ? " " + state.aspect : "");
+                const parts = currentMode === 'individual'
+                    ? [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality]
+                    : [bgp, state.scene, subject, state.quality];
+                    
+                let filtered = parts.filter(i => i);
+                res = filtered.join(", ") + (state.aspect ? " " + state.aspect : "");
+                
             } else {
-                const parts = [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera].filter(i => i);
-                res = parts.join(", ") + (asp ? `, aspect ratio ${asp}` : "");
+                const parts = currentMode === 'individual'
+                    ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
+                    : [state.quality, bgp, state.scene, subject];
+                    
+                let filtered = parts.filter(i => i);
+                res = filtered.join(", ") + (asp ? `, aspect ratio ${asp}` : "");
             }
             document.getElementById('output').value = res;
         }
@@ -367,21 +447,14 @@
             
             const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(area.value);
             if (hasJapanese) {
-                if (!confirm("⚠️ プロンプトに日本語が含まれています。\nAIによっては上手く生成されない場合があります。\n\n翻訳せずにこのままコピーしますか？")) {
-                    return;
-                }
+                if (!confirm("⚠️ プロンプトに日本語が含まれています。\nAIによっては上手く生成されない場合があります。\n\n翻訳せずにこのままコピーしますか？")) return;
             }
 
             area.select();
             area.setSelectionRange(0, 99999);
             if (document.execCommand("copy")) {
                 const t = state.tool;
-                let appName = "";
-                if (t === 'gemini') appName = "Gemini";
-                else if (t === 'chatgpt') appName = "ChatGPT";
-                else if (t === 'midjourney') appName = "Discord (Midjourney)";
-                else appName = "Stable Diffusion";
-                
+                let appName = t === 'gemini' ? "Gemini" : t === 'chatgpt' ? "ChatGPT" : t === 'midjourney' ? "Discord (Midjourney)" : "Stable Diffusion";
                 alert(`✅ コピー完了！\n\nスマホのホーム画面やタスク画面から【 ${appName} 】を開いて、参照画像と一緒にプロンプトを貼り付けてください。`);
             }
         }

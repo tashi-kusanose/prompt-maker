@@ -32,7 +32,7 @@
         }
         .translate-btn.needs-translation { background-color: var(--danger); animation: pulseAlert 1.5s infinite; }
 
-        /* 🌟 モード切替タブ（2択） */
+        /* モード切替タブ */
         .mode-toggle { display: flex; background: #eaf2f8; padding: 6px; border-radius: 12px; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .mode-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; background: transparent; color: #7f8c8d; }
         .mode-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -90,7 +90,7 @@
             <ol style="color: #444; line-height: 1.7;">
                 <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
                 <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
-                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（フレーミングで全身を選ぶとポーズが追加されます）</li>
+                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（シーンモードでは画風も選べます！）</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -147,6 +147,9 @@
             </div>
 
             <div id="grid-scene" class="grid hidden" style="margin-bottom: 25px;">
+                <div class="category-card" onclick="openSelection('characterStyle')" style="border-color: #2ecc71; background-color: #f4fbf7;">
+                    <span class="card-icon">👤</span><div class="card-label" style="color: #27ae60;">キャラクターの画風</div><div class="card-value empty" id="val-characterStyle">指定なし</div>
+                </div>
                 <div class="category-card" onclick="openSelection('scene')" style="grid-column: 1 / -1; border-color: #f39c12; background-color: #fffaf0;">
                     <span class="card-icon">🎬</span><div class="card-label" style="color: #e67e22;">シーン・シチュエーション</div><div class="card-value empty" id="val-scene">指定なし</div>
                 </div>
@@ -171,8 +174,8 @@
     </div>
 
     <script>
-        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '', scene: '' };
-        let currentMode = 'individual'; // 'individual' or 'scene'
+        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '', scene: '', characterStyle: '' };
+        let currentMode = 'individual'; 
 
         const promptData = {
             tool: {
@@ -217,7 +220,7 @@
                 ]
             },
             framing: {
-                title: "フレーミング", desc: "人物がカメラに映る範囲を指定します。※「全身」「上半身」を選ぶとポーズ設定が追加されます。",
+                title: "フレーミング", desc: "人物がカメラに映る範囲を指定します。",
                 options: [
                     { val: '', label: '指定なし' }, { val: 'full body shot, showing entire body', label: '全身' },
                     { val: 'upper body shot, from waist up', label: '上半身' }, { val: 'bust-up shot, close-up on face', label: 'バストアップ' }
@@ -251,7 +254,7 @@
                 ]
             },
             posture: {
-                title: "基本姿勢", desc: "キャラクターの全体的な姿勢を指定します。（全身描写用）",
+                title: "基本姿勢", desc: "キャラクターの全体的な姿勢を指定します。",
                 options: [
                     { val: '', label: '指定なし' }, { val: 'keep original posture from the reference image', label: '参照画像の姿勢を維持' },
                     { val: 'standing pose, elegant posture', label: '立っている (立ち姿)' }, { val: 'sitting on a chair', label: '椅子に座っている' },
@@ -268,10 +271,20 @@
                     { val: 'cat pose with hands, playful', label: '🐾 猫のポーズ' }, { val: 'winking and sticking tongue out', label: '😜 ウインク＆舌ぺろ' }
                 ]
             },
+            // 🌟 追加項目：キャラクターの画風（シーンモード用）
+            characterStyle: {
+                title: "キャラクターの画風", desc: "シーンに登場する人物のテイストを指定します。",
+                options: [
+                    { val: '', label: '指定なし (シーンや元画像にお任せ)' },
+                    { val: 'photorealistic, realistic photograph, real person', label: '📷 実写 (リアル)' },
+                    { val: 'anime style character, 2d illustration', label: '🌸 アニメキャラ' },
+                    { val: '3d chibi character, cute 3d render, super deformed', label: '🧸 3Dのちびキャラ' }
+                ]
+            },
             scene: {
                 title: "シーン・シチュエーション", desc: "スタイルや照明、背景などをまとめて指定し、特定の場面を一括で再現します。",
                 options: [
-                    { val: '', label: '指定なし (個別設定を使用)' },
+                    { val: '', label: '指定なし' },
                     { val: 'live house setting, stage lighting, spot light, enthusiastic crowd in background, rock concert atmosphere', label: '🎤 ライブハウスで熱唱' },
                     { val: 'wedding ceremony setting, elegant white wedding dress, bouquet, soft ethereal lighting, church background, romantic atmosphere', label: '💍 結婚式のウエディングドレス' },
                     { val: 'cyberpunk city street, neon rain, futuristic night scenery, crowded street, glowing holographic signs, dark atmosphere', label: '🌃 サイバーパンク都市' },
@@ -289,7 +302,7 @@
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
 
-        // 🌟 タブ切り替え機能
+        // タブ切り替え
         function switchMode(mode) {
             currentMode = mode;
             const btnInd = document.getElementById('btn-mode-individual');
@@ -302,8 +315,9 @@
                 btnSce.classList.remove('active');
                 gridInd.classList.remove('hidden');
                 gridSce.classList.add('hidden');
-                // シーンをリセット
+                // シーンモードの項目をリセット
                 updateStateAndUI('scene', '', '指定なし');
+                updateStateAndUI('characterStyle', '', '指定なし');
             } else {
                 btnSce.classList.add('active');
                 btnInd.classList.remove('active');
@@ -372,7 +386,6 @@
             updateStateAndUI(currentCategory, val, label);
             closeModal('selectionModal');
             
-            // フレーミングによるポーズ連動
             if (currentCategory === 'framing') {
                 const cardPosture = document.getElementById('card-posture');
                 const cardGesture = document.getElementById('card-gesture');
@@ -398,13 +411,11 @@
             const subject = document.getElementById('main-subject').value.trim();
             const t = state.tool;
             
-            // 日本語チェック
             const translateBtn = document.getElementById('translate-btn');
             const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(subject);
             if (hasJapanese) translateBtn.classList.add('needs-translation');
             else translateBtn.classList.remove('needs-translation');
 
-            // 背景プロンプト
             let bgp = "";
             if (state.background === 'keep') bgp = (t === 'midjourney' ? "keep original background" : "matching original image environment");
             else if (state.background === 'change') bgp = "stylized new background";
@@ -412,11 +423,10 @@
             let asp = state.aspect ? state.aspect.replace('--ar ', '') : '';
             let res = "";
             
-            // モードに応じたプロンプト生成
             if (t === 'gemini' || t === 'chatgpt') {
                 const parts = currentMode === 'individual' 
                     ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
-                    : [state.quality, bgp, state.scene, subject];
+                    : [state.quality, bgp, state.characterStyle, state.scene, subject];
                 
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (filtered.length ? "." : "");
@@ -425,7 +435,7 @@
             } else if (t === 'midjourney') {
                 const parts = currentMode === 'individual'
                     ? [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality]
-                    : [bgp, state.scene, subject, state.quality];
+                    : [bgp, state.characterStyle, state.scene, subject, state.quality];
                     
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (state.aspect ? " " + state.aspect : "");
@@ -433,7 +443,7 @@
             } else {
                 const parts = currentMode === 'individual'
                     ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
-                    : [state.quality, bgp, state.scene, subject];
+                    : [state.quality, bgp, state.characterStyle, state.scene, subject];
                     
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (asp ? `, aspect ratio ${asp}` : "");

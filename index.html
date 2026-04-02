@@ -52,6 +52,7 @@
         .card-value.empty { color: #bdc3c7; font-weight: normal; font-size: 0.9rem; }
         .card-icon { position: absolute; right: 15px; top: 15px; opacity: 0.2; font-size: 1.2rem; }
 
+        /* モーダル共通 */
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); animation: fadeIn 0.2s ease-out; }
         .modal-content { background-color: #fff; position: absolute; bottom: 0; left: 0; width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 25px 20px 40px; box-sizing: border-box; overflow-y: auto; box-shadow: 0 -5px 20px rgba(0,0,0,0.15); animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
         @media (min-width: 600px) {
@@ -63,25 +64,44 @@
         
         .close-btn { position: absolute; top: 15px; right: 20px; background: #f1f2f6; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 18px; font-weight: bold; color: #7f8c8d; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .modal-header { margin-bottom: 20px; padding-right: 40px; }
-        .modal-title { font-size: 1.3rem; margin: 0 0 8px 0; color: var(--text); }
-        .modal-desc { font-size: 0.9rem; color: #7f8c8d; margin: 0; line-height: 1.5; }
+        .modal-title { font-size: 1.3rem; margin: 0 0 8px 0; color: var(--text); line-height: 1.3; }
+        .modal-desc { font-size: 0.95rem; color: #555; margin: 0; line-height: 1.6; }
 
-        /* 🌟 選択肢ボタン（2列グリッド化） */
-        .option-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .option-btn { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; padding: 12px 15px; text-align: left; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
-        .option-btn:active { transform: scale(0.98); background: #f1f2f6; }
-        .option-btn.selected { background: #eaf2f8; border-color: var(--primary); }
-        .option-btn-content { flex-grow: 1; width: 100%; }
-        .option-btn-label { font-size: 1rem; font-weight: bold; color: var(--text); display: flex; justify-content: space-between; align-items: flex-start; }
-        .option-btn.selected .option-btn-label::after { content: '✓'; font-weight: bold; font-size: 1.2rem; color: var(--primary); margin-left: 5px; line-height: 1; }
-        .option-btn-desc { font-size: 0.8rem; color: #7f8c8d; margin-top: 6px; line-height: 1.4; font-weight: normal; word-break: break-word; }
-        .option-btn.selected .option-btn-desc { color: #5dade2; }
+        /* 選択肢ボタン（2列グリッド化） */
+        .option-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; align-items: start; }
+        .option-wrapper { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; transition: 0.2s; }
+        .option-wrapper.selected { background: #eaf2f8; border-color: var(--primary); }
+        .option-btn-container { display: flex; justify-content: space-between; align-items: center; padding: 14px 12px; cursor: pointer; height: 100%; box-sizing: border-box; }
+        .option-btn-container:active { background-color: #f1f2f6; }
+        .option-btn-label { flex-grow: 1; font-size: 0.95rem; font-weight: bold; color: var(--text); line-height: 1.3; }
+        .option-wrapper.selected .option-btn-label { color: var(--primary); }
         
-        /* スマホ画面時の文字サイズ微調整 */
-        @media (max-width: 480px) {
-            .option-btn { padding: 10px; }
-            .option-btn-label { font-size: 0.9rem; }
-            .option-btn-desc { font-size: 0.75rem; }
+        /* 白色で控えめな「？」ボタン */
+        .option-info-btn { 
+            color: #7f8c8d; 
+            background-color: #ffffff; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 50%; 
+            width: 26px; 
+            height: 26px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            font-family: Arial, sans-serif;
+            cursor: pointer; 
+            margin-left: 8px; 
+            flex-shrink: 0; 
+            transition: all 0.2s; 
+        }
+        .option-info-btn:active { transform: scale(0.9); background-color: #f1f2f6; }
+        .option-wrapper.selected .option-info-btn { border-color: var(--primary); color: var(--primary); }
+
+        @media (max-width: 360px) {
+            .option-btn-label { font-size: 0.85rem; }
+            .option-btn-container { padding: 12px 10px; }
+            .option-info-btn { width: 24px; height: 24px; font-size: 0.8rem; }
         }
 
         .output-box { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
@@ -98,23 +118,37 @@
         .dev-download-area { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ecf0f1; }
         .btn-download { background-color: #34495e; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-download:active { transform: scale(0.98); }
+
+        /* 詳細説明用モーダルを最前面にする */
+        #infoModal { z-index: 1010; }
+        #infoModal .modal-content { max-width: 400px; padding-bottom: 30px; }
+        #infoModal .modal-header { margin-bottom: 0; }
     </style>
 </head>
 <body>
+
+    <div id="infoModal" class="modal-overlay" onclick="closeModal('infoModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('infoModal')">×</button>
+            <div class="modal-header">
+                <h2 id="infoModalTitle" class="modal-title">タイトル</h2>
+                <div style="height: 15px;"></div>
+                <p id="infoModalBody" class="modal-desc">説明文がここに入ります。</p>
+            </div>
+        </div>
+    </div>
 
     <div id="updateModal" class="modal-overlay" onclick="closeModal('updateModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="closeModal('updateModal')">×</button>
             <div class="modal-header">
                 <h2 class="modal-title">🚀 更新情報</h2>
-                <p class="modal-desc">ツールがさらに便利にアップデートされました！</p>
+                <p class="modal-desc" style="margin-top: 5px;">ツールがさらに便利にアップデートされました！</p>
             </div>
             <ul class="update-list">
-                <li><b>選択肢ポップアップを2列化</b><br>全項目の選択肢が2列（タイル状）になり、一覧性が劇的にアップしました。</li>
-                <li><b>各項目の詳細説明を追加</b><br>選択ボタンごとに、意味や効果の詳しい説明が表示されるようになりました。</li>
-                <li><b>「シーン一括指定」モードを追加</b><br>背景や照明、スタイルをまるごとセットで指定できる新機能です。</li>
-                <li><b>新しいシーンの追加</b><br>「ネオンアート」「セミリアルポートレート」「ライブハウスで熱唱」などを追加しました。</li>
-                <li><b>ChatGPT用の安定性向上</b><br>ChatGPT選択時、画像生成を確実に実行させる専用プロンプト（英語）が自動で付与されます。</li>
+                <li><b>アニメ3Dプロンプトの調整</b><br>個別設定で「アニメキャラ」体型と「3Dレンダー」画風を組み合わせた際、実写に寄らず、よりアニメゲームのような質感になるようにプロンプト生成ロジックを強化しました。</li>
+                <li><b>説明文のポップアップ化</b><br>「？」ボタンをタップすると、画面中央に詳しい解説が表示されるようになりました。</li>
+                <li><b>新しいシーンの追加</b><br>「サイケデリックアート」「ネオンアート」などを追加しました。</li>
             </ul>
         </div>
     </div>
@@ -125,10 +159,10 @@
             <div class="modal-header">
                 <h2 class="modal-title">📖 使い方ガイド</h2>
             </div>
-            <ol style="color: #444; line-height: 1.7;">
+            <ol style="color: #444; line-height: 1.7; margin-top: 10px;">
                 <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
                 <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
-                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（シーンモードでは画風も選べます！）</li>
+                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（「？」ボタンで詳細確認が可能）</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -139,7 +173,7 @@
             <button class="close-btn" onclick="closeModal('selectionModal')">×</button>
             <div class="modal-header">
                 <h2 id="modalTitle" class="modal-title">タイトル</h2>
-                <p id="modalDesc" class="modal-desc">説明文</p>
+                <p id="modalDesc" class="modal-desc" style="margin-top: 5px; font-size: 0.85rem;">説明文</p>
             </div>
             <div id="optionList" class="option-list"></div>
         </div>
@@ -149,7 +183,7 @@
         <h1>🎨 Prompt Maker Pro</h1>
         
         <div class="update-notice" onclick="openModal('updateModal')">
-            🔔 更新情報：見やすい2列表示＆「ネオンアート」を追加！
+            🔔 更新情報：「頭身・体型」にアニメキャラを追加！
         </div>
 
         <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方を見る</button></div>
@@ -231,7 +265,7 @@
                 options: [
                     { val: 'gemini', label: 'Gemini (推奨)', desc: 'Googleの最新AI。自然な文章での指示が得意です。' }, 
                     { val: 'chatgpt', label: 'ChatGPT / DALL-E 3', desc: '指示に忠実。確実に画像生成を実行するコマンドを自動付与します。' },
-                    { val: 'midjourney', label: 'Midjourney (Discord)', desc: '芸術性に特化。単語区切り＋パラメータ形式になります。' }, 
+                    { val: 'midjourney', label: 'Midjourney', desc: '芸術性に特化。単語区切り＋パラメータ形式になります。' }, 
                     { val: 'stablediffusion', label: 'Stable Diffusion', desc: '自由度が高く、タグ（カンマ区切り）形式を好みます。' }
                 ]
             },
@@ -239,7 +273,9 @@
                 title: "頭身・体型", desc: "キャラクターのデフォルメ具合やスタイルを指定します。",
                 options: [
                     { val: '', label: '指定なし', desc: '参照画像やAIのデフォルトに任せます。' },
-                    { val: 'chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes', label: 'ちびキャラ・SDキャラ', desc: '2〜3頭身の小柄で可愛らしい体型。目が大きく描かれます。' },
+                    { val: 'chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes', label: 'ちびキャラ', desc: '2〜3頭身の小柄で可愛らしい体型。目が大きく描かれます。' },
+                    // 🌟 ここを追加
+                    { val: 'cute anime character face, standard anime proportions, proportional body, normal stature', label: 'アニメキャラ', desc: '2Dアニメやイラストの標準的な体型バランス。顔立ちもアニメ寄りにします。' },
                     { val: 'tall stature, 8 heads tall, model proportions, long legs', label: '高頭身・モデル体型', desc: '8頭身以上のすらっとした大人びたスタイル。' }
                 ]
             },
@@ -251,8 +287,8 @@
                     { val: 'anime style, 2d illustration', label: 'アニメ・イラスト', desc: '2Dのセル画風や、鮮やかなデジタルイラスト表現。' }, 
                     { val: 'oil painting, traditional art', label: '油絵・伝統絵画', desc: '筆致が残るクラシックで芸術的な絵画風。' },
                     { val: 'watercolor painting', label: '水彩画', desc: 'にじみや透明感のある、優しい手描き表現。' }, 
-                    { val: '3d render, octane render', label: '3Dレンダー・CG', desc: 'ゲームCGのような滑らかで立体的な表現。' },
-                    { val: 'pencil sketch, line art', label: '鉛筆画・線画', desc: 'デッサンやラフスケッチ、モノクロの線画風。' }
+                    { val: '3d render, octane render', label: '3Dレンダー', desc: 'ゲームCGのような滑らかで立体的な表現。' },
+                    { val: 'pencil sketch, line art', label: '鉛筆画・線画', desc: 'デッサンやラフスケッチ、モノクロの線画風.鉛筆画・線画。' }
                 ]
             },
             style: {
@@ -311,23 +347,23 @@
                     { val: '--ar 1:1', label: '1:1 (正方形)', desc: 'SNSのプロフィールアイコンなどに最適な比率。' },
                     { val: '--ar 16:9', label: '16:9 (横長)', desc: 'YouTubeやPC壁紙、映画のような風景を見せるのに適した比率。' }, 
                     { val: '--ar 9:16', label: '9:16 (縦長)', desc: 'スマホの壁紙やTikTok、キャラクターの立ち絵に最適な比率。' }, 
-                    { val: '--ar 3:2', label: '3:2 (写真サイズ)', desc: '一眼レフカメラで撮影したような標準的な写真の比率。' }
+                    { val: '--ar 3:2', label: '3:2 (写真)', desc: '一眼レフカメラで撮影したような標準的な写真の比率。' }
                 ]
             },
             background: {
                 title: "背景の扱い", desc: "元の画像にある背景をどう扱うかを指示します。",
                 options: [
                     { val: '', label: '指定なし', desc: 'AIの判断に任せます。' }, 
-                    { val: 'keep', label: '参照画像の背景を維持する', desc: '元の画像に写っている部屋や風景をできる限りそのまま残します。' }, 
-                    { val: 'change', label: 'スタイルに合わせて変更', desc: '選んだスタイルやシーンに合わせて背景を新しく作り直します。' }
+                    { val: 'keep', label: '背景を維持する', desc: '元の画像に写っている部屋や風景をできる限りそのまま残します。' }, 
+                    { val: 'change', label: '新しく作る', desc: '選んだスタイルやシーンに合わせて背景を新しく作り直します。' }
                 ]
             },
             posture: {
                 title: "基本姿勢", desc: "キャラクターの全体的な姿勢を指定します。",
                 options: [
                     { val: '', label: '指定なし', desc: 'AIの判断に任せます。' }, 
-                    { val: 'keep original posture from the reference image', label: '参照画像の姿勢を維持', desc: '元画像と同じポーズ（立ち・座りなど）を崩さずに生成します。' },
-                    { val: 'standing pose, elegant posture', label: '立っている (立ち姿)', desc: 'まっすぐ、または少しポーズをとって立っている状態。' }, 
+                    { val: 'keep original posture from the reference image', label: '参照画像の姿勢を維持', desc: '元画像と同じポーズを崩さずに生成します。' },
+                    { val: 'standing pose, elegant posture', label: '立っている', desc: 'まっすぐ、または少しポーズをとって立っている状態。' }, 
                     { val: 'sitting on a chair', label: '椅子に座っている', desc: '椅子やソファ、ベンチなどに腰掛けている状態。' },
                     { val: 'sitting on the floor, relaxed', label: '床に座っている', desc: '床や地面にペタンと座ったり、あぐらをかいたりしている状態。' }, 
                     { val: 'dynamic action pose, in motion', label: '躍動的なアクション', desc: 'ジャンプしたり走ったり、動きのあるダイナミックな体勢。' }
@@ -343,7 +379,7 @@
                     { val: 'making a heart with hands', label: '🫶 両手でハート', desc: '両手を使って胸元や頭の上でハートの形を作るポーズ。' }, 
                     { val: 'hand on cheek, cute pose', label: '😚 頬に手を当てる', desc: '片手を頬にそっと添える、可愛らしく女の子らしい仕草。' },
                     { val: 'chin resting on hands, cute charming pose', label: '🥺 あごのせポーズ', desc: '両手の上にあごを乗せて、上目遣いで見つめるあざといポーズ。' }, 
-                    { val: 'hands on cheeks, blushing shy pose', label: '😳 照れポーズ (両手頬)', desc: '両手を頬に当てて、恥ずかしそうにしている仕草。' },
+                    { val: 'hands on cheeks, blushing shy pose', label: '😳 照れポーズ', desc: '両手を頬に当てて、恥ずかしそうにしている仕草。' },
                     { val: 'cat pose with hands, playful', label: '🐾 猫のポーズ', desc: '両手を軽く握って顔の横に置き、猫のように振る舞うポーズ。' }, 
                     { val: 'winking and sticking tongue out', label: '😜 ウインク＆舌ぺろ', desc: '片目をつぶり、少し舌を出したお茶目で遊び心のある表情。' }
                 ]
@@ -358,24 +394,27 @@
                 ]
             },
             scene: {
-                title: "シーン・シチュエーション", desc: "スタイル、構図、ライティングなどをまとめて指定し、特定の雰囲気を再現します。",
+                title: "シーン・シチュエーション", desc: "スタイル、構図、ライティングなどをまとめて指定し、特定の雰囲気を一括で再現します。",
                 options: [
                     { val: '', label: '指定なし', desc: '個別設定タブの内容が優先されます。' },
                     { val: 'live house setting, stage lighting, spot light, enthusiastic crowd in background, rock concert atmosphere', label: '🎤 ライブハウスで熱唱', desc: 'カラフルなステージ照明、観客の熱気、マイクを持つロックな雰囲気。' },
                     { val: 'wedding ceremony setting, elegant white wedding dress, bouquet, soft ethereal lighting, church background, romantic atmosphere', label: '💍 結婚式のウエディングドレス', desc: '純白のドレスとブーケ。教会の背景と柔らかく神聖な光。' },
                     { val: 'cyberpunk city street, neon rain, futuristic night scenery, crowded street, glowing holographic signs, dark atmosphere', label: '🌃 サイバーパンク都市', desc: 'ネオンの雨が降る、近未来的で雑多な夜の路地裏。' },
-                    { val: 'enchanted forest setting, magical atmosphere, ancient ruins, glowing bioluminescent plants, mystical light', label: '🌲 神秘的なファンタジーの森', desc: '光る植物や古代の遺跡がある、魔法に満ちた幻想的な森。' },
+                    { val: 'enchanted forest setting, magical atmosphere, ancient ruins, glowing bioluminescent plants, mystical light', label: '🌲 神秘的な森', desc: '光る植物や古代の遺跡がある、魔法に満ちた幻想的な森。' },
                     { val: 'retro Japanese kissaten setting, Showa period aesthetic, nostalgic atmosphere, table with coffee, cozy bokeh', label: '☕ レトロな純喫茶', desc: '昭和レトロな内装、木製家具と珈琲。ノスタルジックな色合い。' },
                     { val: 'after school classroom, golden hour, sunlight streaming through window, nostalgic atmosphere, school desk and chair', label: '🌇 放課後の教室', desc: '窓から差し込むオレンジ色の西日と、静かな放課後の教室。' },
                     { val: 'tropical beach at sunset, golden hour lighting, silhouette of palm trees, ocean waves', label: '🏝️ 夕暮れのビーチ', desc: 'サンセットの海辺。ヤシの木のシルエットと波打ち際。' },
                     {
                         val: 'Please generate a high-quality portrait that prioritizes the attached reference image above all else and reflects it as strictly and accurately as possible, while preserving the character’s identity and keeping changes to their features to an absolute minimum. Do not make them look like a different person. Faithfully match the facial features, face shape, eye shape, eye size, eyelashes, nose bridge, mouth shape, lip thickness, pale translucent skin, hairstyle, flow of the bangs, hair volume, hair length, hair color, eye color, lip color, small earring near the ear, fingertip position, clothing, expression, gaze, head tilt, and the overall quiet, cool, fragile atmosphere of the reference image.\n\nThe composition should be a vertical 9:16 smartphone wallpaper format, with an extreme close-up of the face and one eye as the main focal point, in a slightly tilted diagonal composition. Focus most sharply on the main eye, while letting the other eye be naturally partially obscured by hair or shadow. The hair color, length, flow, strand placement, eye color, lip color, and clothing must match the reference image exactly. Also preserve the pose in which the index finger is gently placed against the lower lip.\n\nKeep the beautiful anime-style facial design, but make the textures and lighting slightly more photorealistic. The skin, hair, eyelashes, lips, clothing texture, light and shadow, depth, and atmosphere should feel natural and delicate like a real photographic portrait. Carefully render every single hair strand, eyelash, the transparency of the eyes, the gloss of the lips, and the smoothness of the skin.\n\nUse dramatic high-contrast lighting, with soft but strong light hitting part of the face while the rest is wrapped in deep shadow. Strengthen the shadow definition slightly, adding rich dimensional depth to the cheeks, nose bridge, eyelids, mouth area, and fingertips. Keep the dark areas deep and moody, but do not crush them into pure black; preserve subtle tonal gradation for a cinematic shadow effect. The background should be a dark, dreamy bokeh background with a nighttime atmosphere, subtle light bloom, and soft circular bokeh so that the face stands out the most.\n\nDo not make the face fully photorealistic; keep it anime-style with semi-realistic textures. Do not significantly change the hairstyle, hair color, hair length, eye color, lip color, clothing, or expression. Do not add accessories. Do not include hats, glasses, unnecessary background objects, text, logos, or watermarks.',
-                        label: '📷 セミリアルポートレート', desc: '参照画像の顔パーツを極限まで忠実に再現し、映画のような光と影で魅せる超高画質ポートレート。'
+                        label: '📷 セミリアルポートレート', desc: '顔パーツを極限まで忠実に再現し、映画のような光と影で魅せる超高画質ポートレート。'
                     },
-                    // 🌟 新しく追加した項目
                     {
                         val: 'Using the attached character image as the primary reference, fully preserve the character’s silhouette, facial expression, hairstyle, outfit, accessories, and pose exactly, without altering the character design in any way. Render the image in a neon glowing line art style with a strong cyberpunk aesthetic. Set the background to pure black (#000000), completely empty, with no pattern, no scenery, and no extra objects. Draw the character with clean, sharp luminous outline lines and glowing internal detail lines, using strong neon emission and a strong outer bloom glow. Keep shading and fill to a minimum, leaving large black areas intact, and use the glowing lines and line density to create depth and form. Apply a natural multi-color neon gradient across the character, including cyan, emerald, blue, purple, pink, orange, and gold. Make the eyes glossy and vivid, with bright sparkling highlights and neon reflections inside the irises. Render fur and glittery or lame fabric with dense glowing linework, and scatter small light particles, glowing dots, sparks, and shimmer around the character. High contrast, ultra-detailed, masterpiece, 8K, clean lines, sharp focus. Avoid any white, gray, or colored background, any scenery or decorative pattern, any extra objects, any change to the pose, hairstyle, outfit, accessories, or expression, any transformation into a different character, any low contrast, blur, soft lines, painterly fill, heavy shading, flat lighting, realistic background, depth of field, bokeh, noise, low detail, or messy linework.',
-                        label: '🎆 ネオンアート', desc: '参照キャラを維持し、純黒背景にサイバーパンクな多色ネオン発光ラインアートで描画します。'
+                        label: '🎆 ネオンアート', desc: '純黒背景にサイバーパンクな多色ネオン発光ラインアートで描画します。'
+                    },
+                    {
+                        val: 'An intense psychedelic portrait, close-up upper body composition, facing directly forward with the chin slightly raised, radiating confidence, defiance, attitude, and powerful artistic presence. The expression should feel bold, magnetic, and emotionally charged. Render the image in a gritty hand-drawn style, merging surreal fantasy with chaos. Incorporate chaotic pencil sketch lines, rough textures, raw expressive strokes, and layered abstract energy throughout the composition. The atmosphere should feel dreamlike, rebellious, hypnotic, and visually explosive, as if fantasy and madness are colliding in a single frame. Emphasize artistic strength, dramatic presence, and emotional intensity. Ultra-detailed, highly expressive, textured, dynamic composition, surreal lighting, masterpiece.',
+                        label: '🎡 サイケデリックアート', desc: 'ざらついた手描き風、混沌とした線、超現実的で爆発的なエネルギーを持つアート。'
                     }
                 ]
             }
@@ -386,6 +425,14 @@
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
+
+        // 新機能：説明文をポップアップで表示する
+        function showDescription(e, title, desc) {
+            e.stopPropagation(); // 選択ボタンのクリックイベントが発動するのを防ぐ
+            document.getElementById('infoModalTitle').innerText = title;
+            document.getElementById('infoModalBody').innerText = desc;
+            openModal('infoModal');
+        }
 
         function switchMode(mode) {
             currentMode = mode;
@@ -455,27 +502,29 @@
             listDiv.innerHTML = '';
             
             data.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn' + (state[categoryKey] === opt.val ? ' selected' : '');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'option-wrapper' + (state[categoryKey] === opt.val ? ' selected' : '');
                 
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'option-btn-content';
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'option-btn-container';
+                btnContainer.onclick = () => selectOption(opt.val, opt.label);
                 
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'option-btn-label';
                 labelDiv.innerText = opt.label;
-                contentDiv.appendChild(labelDiv);
+                btnContainer.appendChild(labelDiv);
 
+                // 説明がある場合は「？」ボタンを設置
                 if (opt.desc) {
-                    const descDiv = document.createElement('div');
-                    descDiv.className = 'option-btn-desc';
-                    descDiv.innerText = opt.desc;
-                    contentDiv.appendChild(descDiv);
+                    const infoBtn = document.createElement('div');
+                    infoBtn.className = 'option-info-btn';
+                    infoBtn.innerText = '?';
+                    infoBtn.onclick = (e) => showDescription(e, opt.label, opt.desc);
+                    btnContainer.appendChild(infoBtn);
                 }
                 
-                btn.appendChild(contentDiv);
-                btn.onclick = () => selectOption(opt.val, opt.label);
-                listDiv.appendChild(btn);
+                wrapper.appendChild(btnContainer);
+                listDiv.appendChild(wrapper);
             });
             openModal('selectionModal');
         }

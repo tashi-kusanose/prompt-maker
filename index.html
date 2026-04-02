@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>画像生成プロンプトメーカー | App Style</title>
@@ -10,6 +9,12 @@
         .container { max-width: 800px; margin: 0 auto; background: transparent; padding: 10px 0 40px 0; }
         h1 { text-align: center; color: var(--text); font-size: 1.6rem; margin-bottom: 20px; text-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         
+        /* 更新情報バナー */
+        .update-notice { background-color: #fff8e1; color: #d35400; padding: 12px 15px; border-radius: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; border: 1px solid #fdebd0; box-shadow: 0 2px 5px rgba(0,0,0,0.04); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .update-notice:active { transform: scale(0.98); background-color: #fcf3d9; }
+        .update-list { padding-left: 20px; color: #444; font-size: 0.95rem; line-height: 1.6; margin-top: 10px; }
+        .update-list li { margin-bottom: 12px; }
+
         .how-to-wrap { text-align: center; margin-bottom: 25px; }
         .how-to-open-btn { background-color: #eaf2f8; color: var(--primary); border: 2px solid var(--primary); padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1); }
         .how-to-open-btn:hover { background-color: var(--primary); color: white; }
@@ -19,7 +24,7 @@
 
         .input-group { display: flex; gap: 10px; align-items: stretch; background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
         .subject-textarea { flex-grow: 1; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; font-size: 15px; resize: vertical; height: 80px; font-family: inherit; }
-        .subject-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2); }
+        .subject-textarea:focus { outline: none; border: 2px solid var(--primary); }
         
         .translate-btn { background-color: var(--primary); color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .translate-btn:active { transform: scale(0.95); }
@@ -32,7 +37,6 @@
         }
         .translate-btn.needs-translation { background-color: var(--danger); animation: pulseAlert 1.5s infinite; }
 
-        /* モード切替タブ */
         .mode-toggle { display: flex; background: #eaf2f8; padding: 6px; border-radius: 12px; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .mode-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; background: transparent; color: #7f8c8d; }
         .mode-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -77,20 +81,41 @@
         .btn-reset { background-color: #f1f2f6; color: #7f8c8d; margin-top: 20px; font-size: 0.95rem; padding: 12px; }
 
         .hidden { display: none !important; }
+        
+        /* 🌟 制作者用ダウンロードエリア */
+        .dev-download-area { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ecf0f1; }
+        .btn-download { background-color: #34495e; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-download:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
+    <div id="updateModal" class="modal-overlay" onclick="closeModal('updateModal')" style="display: none;">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('updateModal')">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title">🚀 更新情報</h2>
+                <p class="modal-desc">ツールがさらに便利にアップデートされました！</p>
+            </div>
+            <ul class="update-list">
+                <li><b>「シーン一括指定」モードを追加</b><br>背景や照明、スタイルをまるごとセットで指定できる新機能です。</li>
+                <li><b>新しいシーンの追加</b><br>「セミリアルポートレート」「ライブハウスで熱唱」「結婚式のウエディングドレス」などを追加しました。</li>
+                <li><b>ChatGPT用の安定性向上</b><br>ChatGPT選択時、画像生成を確実に実行させるための専用プロンプト（英語）が自動で付与されるようになりました。</li>
+                <li><b>アプリ風UIにリニューアル</b><br>プルダウンを廃止し、直感的にタップして選べるカード型デザインに変更しました。</li>
+            </ul>
+        </div>
+    </div>
+
     <div id="howToModal" class="modal-overlay" onclick="closeModal('howToModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeModal('howToModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal('howToModal')">×</button>
             <div class="modal-header">
                 <h2 class="modal-title">📖 使い方ガイド</h2>
             </div>
             <ol style="color: #444; line-height: 1.7;">
                 <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
                 <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
-                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。</li>
+                <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（シーンモードでは画風も選べます！）</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -98,7 +123,7 @@
 
     <div id="selectionModal" class="modal-overlay" onclick="closeModal('selectionModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-btn" onclick="closeModal('selectionModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal('selectionModal')">×</button>
             <div class="modal-header">
                 <h2 id="modalTitle" class="modal-title">タイトル</h2>
                 <p id="modalDesc" class="modal-desc">説明文</p>
@@ -109,6 +134,11 @@
 
     <div class="container">
         <h1>🎨 Prompt Maker Pro</h1>
+        
+        <div class="update-notice" onclick="openModal('updateModal')">
+            🔔 更新情報：新機能「シーン一括指定」などを追加！
+        </div>
+
         <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方を見る</button></div>
 
         <div class="section">
@@ -166,10 +196,15 @@
         <div class="section">
             <div class="section-title">✨ 完成したプロンプト</div>
             <div class="output-box">
-                <textarea id="output" class="output-textarea" readonly placeholder="設定を選ぶとここに自動生成されます..."></textarea>
+                <textarea id="output" class="output-textarea" readonly="" placeholder="設定を選ぶとここに自動生成されます..."></textarea>
                 <button class="action-btn btn-copy" onclick="copyPrompt()">📋 プロンプトをコピー</button>
                 <button class="action-btn btn-reset" onclick="resetForm()">🗑️ 入力内容をすべてリセット</button>
             </div>
+        </div>
+
+        <div id="dev-download-area" class="dev-download-area">
+            <button class="btn-download" onclick="downloadHTML()">💾 制作者用: index.htmlをダウンロード</button>
+            <p style="font-size: 11px; color: #7f8c8d; margin-top: 8px;">※このボタンはGitHub Pages（Web上）では自動的に非表示になります。</p>
         </div>
     </div>
 
@@ -281,7 +316,7 @@
                 ]
             },
             scene: {
-                title: "シーン・シチュエーション", desc: "スタイルや照明、背景などをまとめて指定し、特定の場面を一括で再現します。",
+                title: "シーン・シチュエーション", desc: "スタイル、構図、ライティングなどをまとめて指定し、特定の雰囲気を再現します。",
                 options: [
                     { val: '', label: '指定なし' },
                     { val: 'live house setting, stage lighting, spot light, enthusiastic crowd in background, rock concert atmosphere', label: '🎤 ライブハウスで熱唱' },
@@ -290,12 +325,14 @@
                     { val: 'enchanted forest setting, magical atmosphere, ancient ruins, glowing bioluminescent plants, mystical light', label: '🌲 神秘的なファンタジーの森' },
                     { val: 'retro Japanese kissaten setting, Showa period aesthetic, nostalgic atmosphere, table with coffee, cozy bokeh', label: '☕ レトロな純喫茶' },
                     { val: 'after school classroom, golden hour, sunlight streaming through window, nostalgic atmosphere, school desk and chair', label: '🌇 放課後の教室' },
-                    { val: 'tropical beach at sunset, golden hour lighting, silhouette of palm trees, ocean waves', label: '🏝️ 夕暮れのビーチ' }
+                    { val: 'tropical beach at sunset, golden hour lighting, silhouette of palm trees, ocean waves', label: '🏝️ 夕暮れのビーチ' },
+                    {
+                        val: 'Please generate a high-quality portrait that prioritizes the attached reference image above all else and reflects it as strictly and accurately as possible, while preserving the character’s identity and keeping changes to their features to an absolute minimum. Do not make them look like a different person. Faithfully match the facial features, face shape, eye shape, eye size, eyelashes, nose bridge, mouth shape, lip thickness, pale translucent skin, hairstyle, flow of the bangs, hair volume, hair length, hair color, eye color, lip color, small earring near the ear, fingertip position, clothing, expression, gaze, head tilt, and the overall quiet, cool, fragile atmosphere of the reference image.\n\nThe composition should be a vertical 9:16 smartphone wallpaper format, with an extreme close-up of the face and one eye as the main focal point, in a slightly tilted diagonal composition. Focus most sharply on the main eye, while letting the other eye be naturally partially obscured by hair or shadow. The hair color, length, flow, strand placement, eye color, lip color, and clothing must match the reference image exactly. Also preserve the pose in which the index finger is gently placed against the lower lip.\n\nKeep the beautiful anime-style facial design, but make the textures and lighting slightly more photorealistic. The skin, hair, eyelashes, lips, clothing texture, light and shadow, depth, and atmosphere should feel natural and delicate like a real photographic portrait. Carefully render every single hair strand, eyelash, the transparency of the eyes, the gloss of the lips, and the smoothness of the skin.\n\nUse dramatic high-contrast lighting, with soft but strong light hitting part of the face while the rest is wrapped in deep shadow. Strengthen the shadow definition slightly, adding rich dimensional depth to the cheeks, nose bridge, eyelids, mouth area, and fingertips. Keep the dark areas deep and moody, but do not crush them into pure black; preserve subtle tonal gradation for a cinematic shadow effect. The background should be a dark, dreamy bokeh background with a nighttime atmosphere, subtle light bloom, and soft circular bokeh so that the face stands out the most.\n\nDo not make the face fully photorealistic; keep it anime-style with semi-realistic textures. Do not significantly change the hairstyle, hair color, hair length, eye color, lip color, clothing, or expression. Do not add accessories. Do not include hats, glasses, unnecessary background objects, text, logos, or watermarks.',
+                        label: '📷 セミリアルポートレート'
+                    }
                 ]
             }
         };
-
-        let currentCategory = '';
 
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
@@ -428,8 +465,8 @@
                 res = filtered.join(", ") + (filtered.length ? "." : "");
                 if (asp) res += ` Aspect ratio ${asp}.`;
                 
-                // 🌟 ChatGPT選択時は必ず画像生成を実行させる指示を追加（英語に変更済み）
                 if (t === 'chatgpt') {
+                    // ChatGPT選択時は必ず画像生成を実行させる指示を追加（英語）
                     res = "You MUST generate an image.\n" + res;
                 }
                 
@@ -456,7 +493,6 @@
             const area = document.getElementById('output');
             if (!area.value) return alert("内容がありません。設定を選んでください。");
             
-            // 🌟 エラーポップアップが誤作動しないように、日本語チェック機能はそのまま保持
             const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(area.value);
             if (hasJapanese) {
                 if (!confirm("⚠️ プロンプトに日本語が含まれています。\nAIによっては上手く生成されない場合があります。\n\n翻訳せずにこのままコピーしますか？")) return;
@@ -471,9 +507,28 @@
             }
         }
         
+        // 🌟 ページ読み込み時に実行（Web上ならダウンロードボタンを隠す）
         window.onload = function() {
+            // URLが http または https から始まる（Webサーバー上にある）場合、または github.io が含まれる場合
+            if (window.location.protocol.startsWith('http') || window.location.hostname.includes('github.io')) {
+                const devArea = document.getElementById('dev-download-area');
+                if (devArea) devArea.style.display = 'none';
+            }
             generatePrompt();
         };
+
+        // 🌟 ソースコードのダウンロード機能
+        function downloadHTML() {
+            // 現在のHTML構造を取得
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "index.html"; // 保存されるファイル名
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
     </script>
-</body>
-</html>
+
+
+</body></html>

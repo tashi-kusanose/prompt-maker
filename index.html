@@ -26,6 +26,9 @@
         .subject-textarea { flex-grow: 1; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; font-size: 15px; resize: vertical; height: 80px; font-family: inherit; }
         .subject-textarea:focus { outline: none; border: 2px solid var(--primary); }
         
+        .text-input-field { width: 100%; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px 15px; font-size: 15px; box-sizing: border-box; font-family: inherit; transition: 0.2s; }
+        .text-input-field:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2); }
+
         .translate-btn { background-color: var(--primary); color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .translate-btn:active { transform: scale(0.95); }
         .translate-btn:disabled { background-color: #ccc; cursor: wait; }
@@ -52,7 +55,6 @@
         .card-value.empty { color: #bdc3c7; font-weight: normal; font-size: 0.9rem; }
         .card-icon { position: absolute; right: 15px; top: 15px; opacity: 0.2; font-size: 1.2rem; }
 
-        /* モーダル共通 */
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); animation: fadeIn 0.2s ease-out; }
         .modal-content { background-color: #fff; position: absolute; bottom: 0; left: 0; width: 100%; max-height: 90vh; border-radius: 20px 20px 0 0; padding: 25px 20px 40px; box-sizing: border-box; overflow-y: auto; box-shadow: 0 -5px 20px rgba(0,0,0,0.15); animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
         @media (min-width: 600px) {
@@ -67,7 +69,6 @@
         .modal-title { font-size: 1.3rem; margin: 0 0 8px 0; color: var(--text); line-height: 1.3; }
         .modal-desc { font-size: 0.95rem; color: #555; margin: 0; line-height: 1.6; }
 
-        /* 選択肢ボタン（2列グリッド化） */
         .option-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; align-items: start; }
         .option-wrapper { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; transition: 0.2s; }
         .option-wrapper.selected { background: #eaf2f8; border-color: var(--primary); }
@@ -76,24 +77,11 @@
         .option-btn-label { flex-grow: 1; font-size: 0.95rem; font-weight: bold; color: var(--text); line-height: 1.3; }
         .option-wrapper.selected .option-btn-label { color: var(--primary); }
         
-        /* 白色で控えめな「？」ボタン */
         .option-info-btn { 
-            color: #7f8c8d; 
-            background-color: #ffffff; 
-            border: 2px solid #e0e0e0; 
-            border-radius: 50%; 
-            width: 26px; 
-            height: 26px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 0.9rem; 
-            font-weight: bold; 
-            font-family: Arial, sans-serif;
-            cursor: pointer; 
-            margin-left: 8px; 
-            flex-shrink: 0; 
-            transition: all 0.2s; 
+            color: #7f8c8d; background-color: #ffffff; border: 2px solid #e0e0e0; border-radius: 50%; 
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; 
+            font-size: 0.9rem; font-weight: bold; font-family: Arial, sans-serif; cursor: pointer; 
+            margin-left: 8px; flex-shrink: 0; transition: all 0.2s; 
         }
         .option-info-btn:active { transform: scale(0.9); background-color: #f1f2f6; }
         .option-wrapper.selected .option-info-btn { border-color: var(--primary); color: var(--primary); }
@@ -114,12 +102,10 @@
 
         .hidden { display: none !important; }
         
-        /* 制作者用ダウンロードエリア */
         .dev-download-area { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ecf0f1; }
         .btn-download { background-color: #34495e; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-download:active { transform: scale(0.98); }
 
-        /* 詳細説明用モーダルを最前面にする */
         #infoModal { z-index: 1010; }
         #infoModal .modal-content { max-width: 400px; padding-bottom: 30px; }
         #infoModal .modal-header { margin-bottom: 0; }
@@ -146,9 +132,10 @@
                 <p class="modal-desc" style="margin-top: 5px;">ツールがさらに便利にアップデートされました！</p>
             </div>
             <ul class="update-list">
-                <li><b>アニメ3Dプロンプトの調整</b><br>個別設定で「アニメキャラ」体型と「3Dレンダー」画風を組み合わせた際、実写に寄らず、よりアニメゲームのような質感になるようにプロンプト生成ロジックを強化しました。</li>
-                <li><b>説明文のポップアップ化</b><br>「？」ボタンをタップすると、画面中央に詳しい解説が表示されるようになりました。</li>
-                <li><b>新しいシーンの追加</b><br>「サイケデリックアート」「ネオンアート」などを追加しました。</li>
+                <li><b>エフェクト・装飾を大増量！</b><br>「水彩スプラッシュ」「舞い散る花びら」「ホログラムUI」など、画像全体を華やかにするエフェクトを大幅に追加しました。</li>
+                <li><b>ステッカー＆アイコン作成機能を追加！</b><br>新設された「3. ステッカー＆文字入れ」セクションで、用途を指定できるようになりました。</li>
+                <li><b>自由な文字入れ機能</b><br>画像の中に好きな文字を組み込めるようになり、文字の配置も自由に選べます。</li>
+                <li><b>3Dちびキャラの質感を強化</b><br>Gemini等で生成した際、マクロ撮影されたミニチュア・ビニールフィギュアのようなリッチな質感が出るように最適化しました。</li>
             </ul>
         </div>
     </div>
@@ -160,9 +147,10 @@
                 <h2 class="modal-title">📖 使い方ガイド</h2>
             </div>
             <ol style="color: #444; line-height: 1.7; margin-top: 10px;">
-                <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。（画像参照がメインなら空欄でもOK）</li>
+                <li><b>被写体を入力:</b> 描きたいものを日本語で入力し、「翻訳」ボタンを押します。</li>
                 <li><b>ツールとモードを選択:</b> 生成ツールを選び、「個別に設定」するか「シーンで一括指定」するかをタブで選びます。</li>
                 <li><b>オプションを選ぶ:</b> 表示されたカードをタップして、好みの設定を選びます。（「？」ボタンで詳細確認が可能）</li>
+                <li><b>エフェクトや文字を入れる (任意):</b> 「3. エフェクト＆文字入れ」で画像を装飾したり、好きな文字を入力できます。</li>
                 <li><b>コピーして生成:</b> プロンプトをコピーしたら、スマホのアプリを切り替えて生成AIを開き、画像と一緒に貼り付けます！</li>
             </ol>
         </div>
@@ -183,7 +171,7 @@
         <h1>🎨 Prompt Maker Pro</h1>
         
         <div class="update-notice" onclick="openModal('updateModal')">
-            🔔 更新情報：「頭身・体型」にアニメキャラを追加！
+            🔔 更新情報：画像全体に使えるエフェクト・装飾を大幅に追加！
         </div>
 
         <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方を見る</button></div>
@@ -241,6 +229,25 @@
         </div>
 
         <div class="section">
+            <div class="section-title" style="border-left-color: var(--secondary);">3. エフェクト＆文字入れ (オプション)</div>
+            <div class="grid" style="margin-bottom: 15px;">
+                <div class="category-card" onclick="openSelection('formatType')" style="border-color: #e8dff5; background-color: #fffafc;">
+                    <span class="card-icon">🏷️</span><div class="card-label" style="color: var(--secondary);">用途・フォーマット</div><div class="card-value empty" id="val-formatType">指定なし</div>
+                </div>
+                <div class="category-card" onclick="openSelection('graphicEffect')" style="border-color: #e8dff5; background-color: #fffafc;">
+                    <span class="card-icon">💥</span><div class="card-label" style="color: var(--secondary);">エフェクト・装飾</div><div class="card-value empty" id="val-graphicEffect">指定なし</div>
+                </div>
+                <div class="category-card" onclick="openSelection('textPosition')" style="border-color: #e8dff5; background-color: #fffafc;">
+                    <span class="card-icon">🔤</span><div class="card-label" style="color: var(--secondary);">文字の位置</div><div class="card-value empty" id="val-textPosition">指定なし</div>
+                </div>
+            </div>
+            <div style="background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04);">
+                <div style="font-size: 0.8rem; font-weight: bold; color: #7f8c8d; margin-bottom: 8px;">✏️ 画像に入れたい文字 (任意)</div>
+                <input type="text" id="custom-text" class="text-input-field" placeholder="例: Hello!, SALE, 太郎 (※英語推奨)" oninput="generatePrompt()">
+            </div>
+        </div>
+
+        <div class="section">
             <div class="section-title">✨ 完成したプロンプト</div>
             <div class="output-box">
                 <textarea id="output" class="output-textarea" readonly="" placeholder="設定を選ぶとここに自動生成されます..."></textarea>
@@ -256,7 +263,7 @@
     </div>
 
     <script>
-        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '', scene: '', characterStyle: '' };
+        let state = { tool: 'gemini', proportion: '', medium: '', style: '', lighting: '', framing: '', camera: '', quality: '', aspect: '', background: '', posture: '', gesture: '', scene: '', characterStyle: '', formatType: '', textPosition: '', graphicEffect: '' };
         let currentMode = 'individual'; 
 
         const promptData = {
@@ -265,7 +272,7 @@
                 options: [
                     { val: 'gemini', label: 'Gemini (推奨)', desc: 'Googleの最新AI。自然な文章での指示が得意です。' }, 
                     { val: 'chatgpt', label: 'ChatGPT / DALL-E 3', desc: '指示に忠実。確実に画像生成を実行するコマンドを自動付与します。' },
-                    { val: 'midjourney', label: 'Midjourney', desc: '芸術性に特化。単語区切り＋パラメータ形式になります。' }, 
+                    { val: 'midjourney', label: 'Midjourney (Discord)', desc: '芸術性に特化。単語区切り＋パラメータ形式になります。' }, 
                     { val: 'stablediffusion', label: 'Stable Diffusion', desc: '自由度が高く、タグ（カンマ区切り）形式を好みます。' }
                 ]
             },
@@ -273,9 +280,8 @@
                 title: "頭身・体型", desc: "キャラクターのデフォルメ具合やスタイルを指定します。",
                 options: [
                     { val: '', label: '指定なし', desc: '参照画像やAIのデフォルトに任せます。' },
-                    { val: 'chibi style, super deformed, approx 2.5 heads tall, small body, big cute eyes', label: 'ちびキャラ', desc: '2〜3頭身の小柄で可愛らしい体型。目が大きく描かれます。' },
-                    // 🌟 ここを追加
-                    { val: 'cute anime character face, standard anime proportions, proportional body, normal stature', label: 'アニメキャラ', desc: '2Dアニメやイラストの標準的な体型バランス。顔立ちもアニメ寄りにします。' },
+                    { val: 'cute chibi-style character, super deformed, large expressive sparkling anime eyes, plump and soft appearance, adorable aesthetic', label: '🧸 日本風ちびキャラ', desc: '日本のアニメ風で、丸くて愛らしいちびキャラ。' },
+                    { val: 'cute anime character face, standard anime proportions, proportional body, normal stature', label: 'アニメキャラ', desc: '2Dアニメやイラストの標準的な体型バランス。' },
                     { val: 'tall stature, 8 heads tall, model proportions, long legs', label: '高頭身・モデル体型', desc: '8頭身以上のすらっとした大人びたスタイル。' }
                 ]
             },
@@ -287,8 +293,8 @@
                     { val: 'anime style, 2d illustration', label: 'アニメ・イラスト', desc: '2Dのセル画風や、鮮やかなデジタルイラスト表現。' }, 
                     { val: 'oil painting, traditional art', label: '油絵・伝統絵画', desc: '筆致が残るクラシックで芸術的な絵画風。' },
                     { val: 'watercolor painting', label: '水彩画', desc: 'にじみや透明感のある、優しい手描き表現。' }, 
-                    { val: '3d render, octane render', label: '3Dレンダー', desc: 'ゲームCGのような滑らかで立体的な表現。' },
-                    { val: 'pencil sketch, line art', label: '鉛筆画・線画', desc: 'デッサンやラフスケッチ、モノクロの線画風.鉛筆画・線画。' }
+                    { val: 'high-quality 3d render, macro photography of a hyper-realistic miniature vinyl figure, detailed textures, shallow depth of field, cute anime figurine aesthetic', label: '🎨 可愛い3Dレンダー', desc: '高品質なソフビフィギュアをマクロ撮影したような、リッチで立体的な可愛い3D表現。' },
+                    { val: 'pencil sketch, line art', label: '鉛筆画・線画', desc: 'デッサンやラフスケッチ、モノクロの線画風。' }
                 ]
             },
             style: {
@@ -390,7 +396,7 @@
                     { val: '', label: '指定なし', desc: 'シーン全体の雰囲気や参照画像に合わせて自動で決まります。' },
                     { val: 'photorealistic, realistic photograph, real person', label: '📷 実写 (リアル)', desc: '肌の質感や髪の毛一本一本まで本物の人間のように描画します。' },
                     { val: 'anime style character, 2d illustration', label: '🌸 アニメキャラ', desc: '日本のアニメや美麗な2Dデジタルイラストのタッチで描画します。' },
-                    { val: '3d chibi character, cute 3d render, super deformed', label: '🧸 3Dのちびキャラ', desc: 'おもちゃやフィギュアのような、立体的で可愛い2〜3頭身キャラ。' }
+                    { val: 'cute chibi-style character, macro photography of a hyper-realistic miniature vinyl figure, large expressive sparkling anime eyes, detailed textures, adorable anime aesthetic', label: '🧸 可愛いアニメ3Dちびキャラ', desc: 'ソフビフィギュアをマクロ撮影したような、超高品質で愛らしい3Dちびキャラ。' }
                 ]
             },
             scene: {
@@ -417,18 +423,53 @@
                         label: '🎡 サイケデリックアート', desc: 'ざらついた手描き風、混沌とした線、超現実的で爆発的なエネルギーを持つアート。'
                     }
                 ]
+            },
+            // 🌟 拡張されたエフェクトとフォーマット
+            formatType: {
+                title: "用途・フォーマット", desc: "ステッカーやアイコンなど、画像の使用用途に合わせた特殊なフォーマットを指定します。",
+                options: [
+                    { val: '', label: '指定なし (通常画像)', desc: '通常の四角い画像として出力します。' },
+                    { val: 'die-cut sticker design, thick white outline border, isolated on solid white background, flat vector illustration style', label: '✂️ ダイカットステッカー', desc: 'キャラクターの周囲に白いフチがつき、背景が白抜きのステッカー風になります。' },
+                    { val: 'SNS profile picture icon, perfectly centered composition, perfectly square format, visually striking, vibrant colors', label: '📱 SNSアイコン', desc: 'キャラクターが中央に大きく配置され、SNSのプロフィール画像に最適な構図になります。' }
+                ]
+            },
+            textPosition: {
+                title: "文字の配置位置", desc: "画像内にテキストを入れる場合、どこに配置するかを指定します。",
+                options: [
+                    { val: '', label: '指定なし (AIにお任せ)', desc: 'AIが構図に合わせて自動で良い位置に配置します。' },
+                    { val: 'placed neatly at the top margin', label: '⬆️ 上部', desc: '画像の上の方にテキストを配置します。' },
+                    { val: 'placed neatly at the bottom margin', label: '⬇️ 下部', desc: '画像の下の方にテキストを配置します。' },
+                    { val: 'placed perfectly in the center', label: '⏺️ 中央', desc: '画像のど真ん中に大きくテキストを配置します。' },
+                    { val: 'floating playfully around the subject', label: '🔄 キャラクターの周囲', desc: 'キャラクターの周りを囲むように、ポップに配置します。' },
+                    { val: 'integrated creatively into the background design', label: '🏞️ 背景に溶け込む', desc: '看板やネオンサインのように、背景の景色の一部として文字を描きます。' }
+                ]
+            },
+            // 🌟 エフェクト・装飾を全11種に大幅増量
+            graphicEffect: {
+                title: "エフェクト・装飾", desc: "画像全体やキャラクターの周囲を彩る特殊なグラフィック効果を追加します。",
+                options: [
+                    { val: '', label: '指定なし', desc: '特殊なエフェクトは追加しません。' },
+                    { val: 'sparkling stars, magical glowing glitter, dreamy magical aura', label: '✨ キラキラ・魔法', desc: 'キラキラ輝く星や、魔法のようなふんわりとした光の粒子を追加します。' },
+                    { val: 'floating flower petals, lush botanical elements, elegant floral atmosphere', label: '🌸 舞い散る花びら', desc: 'キャラクターの周囲に美しい花びらが舞う、華やかでエレガントな演出。' },
+                    { val: 'vibrant watercolor splashes, artistic paint drips, colorful ink stains', label: '🎨 水彩スプラッシュ', desc: '芸術的でカラフルな水彩絵の具の飛び散り（スプラッシュ）を追加します。' },
+                    { val: 'comic book halftone dots background, vibrant pop-art style graphics', label: '💥 アメコミ・ポップ', desc: '背景にドット柄が入り、アメコミ風の派手でポップな印象になります。' },
+                    { val: 'manga speed lines, high impact dynamic background', label: '⚡ 集中線・インパクト', desc: '漫画の集中線が入り、勢いや迫力のある強調されたデザインになります。' },
+                    { val: 'floating iridescent soap bubbles, soft light reflections, dreamy atmosphere', label: '🫧 シャボン玉', desc: '虹色に光るシャボン玉がフワフワと漂う、幻想的で可愛いエフェクト。' },
+                    { val: 'soft fluffy pastel clouds, cute kawaii aesthetic overlay', label: '☁️ ふんわりパステル', desc: 'パステルカラーの雲や、柔らかくファンシーな雰囲気を追加します。' },
+                    { val: 'dynamic fire flames, glowing embers, energetic magical sparks', label: '🔥 炎・火の粉', desc: '燃え上がる炎や火の粉が舞う、熱く激しくダイナミックなエフェクト。' },
+                    { val: 'glowing neon signs, cyberpunk digital overlay effects', label: '🚥 サイバーネオン', desc: 'ネオンサインのような発光や、サイバーパンク風のデジタル要素を追加します。' },
+                    { val: 'holographic HUD interfaces, glowing data rings, sci-fi tech overlay', label: '🌐 ホログラムUI', desc: '空中に浮かぶSF的なデータリングやデジタルなインターフェースを表示します。' },
+                    { val: 'glitch art effect, chromatic aberration, VHS aesthetic, retro digital noise', label: '📺 グリッチ・VHS', desc: '映像がバグったようなデジタルノイズや色ズレ（RGBズレ）エフェクト。' }
+                ]
             }
         };
-
-        let currentCategory = '';
 
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         function resetForm() { if (confirm("入力内容をすべてリセットしますか？")) location.reload(); }
 
-        // 新機能：説明文をポップアップで表示する
         function showDescription(e, title, desc) {
-            e.stopPropagation(); // 選択ボタンのクリックイベントが発動するのを防ぐ
+            e.stopPropagation(); 
             document.getElementById('infoModalTitle').innerText = title;
             document.getElementById('infoModalBody').innerText = desc;
             openModal('infoModal');
@@ -514,7 +555,6 @@
                 labelDiv.innerText = opt.label;
                 btnContainer.appendChild(labelDiv);
 
-                // 説明がある場合は「？」ボタンを設置
                 if (opt.desc) {
                     const infoBtn = document.createElement('div');
                     infoBtn.className = 'option-info-btn';
@@ -567,13 +607,22 @@
             if (state.background === 'keep') bgp = (t === 'midjourney' ? "keep original background" : "matching original image environment");
             else if (state.background === 'change') bgp = "stylized new background";
 
+            const customText = document.getElementById('custom-text').value.trim();
+            let typographyPrompt = "";
+            if (customText) {
+                typographyPrompt = `featuring prominent typography that says "${customText}"`;
+                if (state.textPosition) {
+                    typographyPrompt += `, ${state.textPosition}`;
+                }
+            }
+
             let asp = state.aspect ? state.aspect.replace('--ar ', '') : '';
             let res = "";
             
             if (t === 'gemini' || t === 'chatgpt') {
                 const parts = currentMode === 'individual' 
-                    ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
-                    : [state.quality, bgp, state.characterStyle, state.scene, subject];
+                    ? [state.formatType, state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, typographyPrompt, state.graphicEffect]
+                    : [state.formatType, state.quality, bgp, state.characterStyle, state.scene, subject, typographyPrompt, state.graphicEffect];
                 
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (filtered.length ? "." : "");
@@ -585,16 +634,16 @@
                 
             } else if (t === 'midjourney') {
                 const parts = currentMode === 'individual'
-                    ? [state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, state.quality]
-                    : [bgp, state.characterStyle, state.scene, subject, state.quality];
+                    ? [state.formatType, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, typographyPrompt, state.graphicEffect, state.quality]
+                    : [state.formatType, bgp, state.characterStyle, state.scene, subject, typographyPrompt, state.graphicEffect, state.quality];
                     
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (state.aspect ? " " + state.aspect : "");
                 
             } else {
                 const parts = currentMode === 'individual'
-                    ? [state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera]
-                    : [state.quality, bgp, state.characterStyle, state.scene, subject];
+                    ? [state.formatType, state.quality, state.framing, state.proportion, state.posture, state.gesture, bgp, subject, state.medium, state.style, state.lighting, state.camera, typographyPrompt, state.graphicEffect]
+                    : [state.formatType, state.quality, bgp, state.characterStyle, state.scene, subject, typographyPrompt, state.graphicEffect];
                     
                 let filtered = parts.filter(i => i);
                 res = filtered.join(", ") + (asp ? `, aspect ratio ${asp}` : "");

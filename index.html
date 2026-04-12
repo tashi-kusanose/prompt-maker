@@ -9,6 +9,7 @@
         .container { max-width: 800px; margin: 0 auto; background: transparent; padding: 10px 0 40px 0; }
         h1 { text-align: center; color: var(--text); font-size: 1.6rem; margin-bottom: 20px; text-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         
+        /* 更新情報バナー */
         .update-notice { background-color: #fff8e1; color: #d35400; padding: 12px 15px; border-radius: 10px; text-align: center; font-size: 0.9rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; border: 1px solid #fdebd0; box-shadow: 0 2px 5px rgba(0,0,0,0.04); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .update-notice:active { transform: scale(0.98); background-color: #fcf3d9; }
         .update-list { padding-left: 20px; color: #444; font-size: 0.95rem; line-height: 1.6; margin-top: 10px; }
@@ -43,7 +44,6 @@
         .mode-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.2s; background: transparent; color: #7f8c8d; }
         .mode-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        /* 🌟 トップ画面のグリッド（3列に統一） */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-items: stretch; }
         
         .category-card { background: var(--card-bg); border: 2px solid transparent; border-radius: 10px; padding: 12px 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; min-height: 64px; box-sizing: border-box; }
@@ -53,8 +53,6 @@
         .card-label { font-size: 0.75rem; color: #7f8c8d; font-weight: bold; margin-bottom: 4px; line-height: 1.2; position: relative; z-index: 2; word-break: keep-all; }
         .card-value { font-size: 0.85rem; color: var(--text); font-weight: bold; line-height: 1.3; position: relative; z-index: 2; word-break: break-word; }
         .card-value.empty { color: #bdc3c7; font-weight: normal; font-size: 0.75rem; }
-        
-        /* アイコンは透かし風に背景に配置 */
         .card-icon { position: absolute; right: 4px; bottom: -2px; opacity: 0.08; font-size: 2.2rem; line-height: 1; z-index: 1; pointer-events: none; }
 
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); animation: fadeIn 0.2s ease-out; }
@@ -71,20 +69,35 @@
         .modal-title { font-size: 1.3rem; margin: 0 0 8px 0; color: var(--text); line-height: 1.3; }
         .modal-desc { font-size: 0.95rem; color: #555; margin: 0; line-height: 1.6; }
 
-        /* ポップアップ内の選択肢ボタン */
+        /* 🌟 ポップアップ内の選択肢ボタン（3列グリッド化＆右下「？」配置） */
         .option-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-items: stretch; }
-        .option-wrapper { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; transition: 0.2s; height: 100%; box-sizing: border-box; }
+        .option-wrapper { background: #f8f9fa; border: 2px solid transparent; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; transition: 0.2s; height: 100%; box-sizing: border-box; position: relative; /* 子要素の絶対配置の基準にするため追加 */ }
         .option-wrapper.selected { background: #eaf2f8; border-color: var(--primary); box-shadow: 0 2px 6px rgba(52, 152, 219, 0.15); }
-        .option-btn-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 12px 6px; cursor: pointer; height: 100%; box-sizing: border-box; text-align: center; gap: 8px; }
+        .option-btn-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 14px 6px 20px 6px; /* 右下のボタンと被らないように下余白を確保 */ cursor: pointer; height: 100%; box-sizing: border-box; text-align: center; }
         .option-btn-container:active { background-color: #f1f2f6; }
         .option-btn-label { font-size: 0.85rem; font-weight: bold; color: var(--text); line-height: 1.3; }
         .option-wrapper.selected .option-btn-label { color: var(--primary); }
         
+        /* 🌟 白色で控えめな「？」ボタンを右下に絶対配置 */
         .option-info-btn { 
-            color: #7f8c8d; background-color: #ffffff; border: 2px solid #e0e0e0; border-radius: 50%; 
-            width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; 
-            font-size: 0.8rem; font-weight: bold; font-family: Arial, sans-serif; cursor: pointer; 
-            flex-shrink: 0; transition: all 0.2s; 
+            position: absolute; 
+            bottom: 5px; 
+            right: 5px; 
+            color: #7f8c8d; 
+            background-color: #ffffff; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 50%; 
+            width: 22px; 
+            height: 22px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            font-family: Arial, sans-serif; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            z-index: 10; /* クリックできるように手前に配置 */
         }
         .option-info-btn:active { transform: scale(0.9); background-color: #f1f2f6; }
         .option-wrapper.selected .option-info-btn { border-color: var(--primary); color: var(--primary); }
@@ -98,8 +111,8 @@
             
             .option-list { gap: 6px; }
             .option-btn-label { font-size: 0.75rem; }
-            .option-btn-container { padding: 10px 4px; gap: 6px; }
-            .option-info-btn { width: 20px; height: 20px; font-size: 0.75rem; }
+            .option-btn-container { padding: 10px 4px 18px 4px; }
+            .option-info-btn { width: 20px; height: 20px; font-size: 0.7rem; bottom: 4px; right: 4px; }
         }
 
         .output-box { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
@@ -134,7 +147,7 @@
         </div>
     </div>
 
-    <div id="updateModal" class="modal-overlay" onclick="closeModal('updateModal')" style="display: none;">
+    <div id="updateModal" class="modal-overlay" onclick="closeModal('updateModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="closeModal('updateModal')">×</button>
             <div class="modal-header">
@@ -142,15 +155,14 @@
                 <p class="modal-desc" style="margin-top: 5px;">ツールがさらに便利にアップデートされました！</p>
             </div>
             <ul class="update-list">
+                <li><b>「？」ボタンを右下に移動</b><br>説明を表示する「？」ボタンをタイルの右下に配置し、オプションを選択しようとして誤タップしてしまうのを防ぎました。</li>
                 <li><b>トップ画面も「横3列デザイン」に！</b><br>トップ画面のカードも全て3列表示になり、よりスマホアプリらしいスッキリとした一覧性になりました。</li>
-                <li><b>エフェクト・装飾を大増量！</b><br>「水彩スプラッシュ」「舞い散る花びら」「ホログラムUI」など、画像全体を華やかにするエフェクトを大幅に追加しました。</li>
-                <li><b>ステッカー＆アイコン作成機能を追加！</b><br>用途を指定したり、自由な文字入れ機能（テキスト配置の指定も可）が追加されました。</li>
-                <li><b>エフェクトの「複数選択」に対応！</b><br>「エフェクト・装飾」の項目で、キラキラ＋ネオンなど、複数の効果を同時に選べるようになりました（タップで連続選択できます）。</li>
+                <li><b>エフェクト・装飾を大増量＆複数選択に対応！</b><br>画像全体を華やかにするエフェクトを大幅に追加し、同時に複数を組み合わせることも可能になりました。</li>
             </ul>
         </div>
     </div>
 
-    <div id="howToModal" class="modal-overlay" onclick="closeModal('howToModal')" style="display: none;">
+    <div id="howToModal" class="modal-overlay" onclick="closeModal('howToModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="closeModal('howToModal')">×</button>
             <div class="modal-header">
@@ -166,14 +178,14 @@
         </div>
     </div>
 
-    <div id="selectionModal" class="modal-overlay" onclick="closeModal('selectionModal')" style="display: none;">
+    <div id="selectionModal" class="modal-overlay" onclick="closeModal('selectionModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-btn" onclick="closeModal('selectionModal')">×</button>
             <div class="modal-header">
-                <h2 id="modalTitle" class="modal-title">生成ツールの選択</h2>
-                <p id="modalDesc" class="modal-desc" style="margin-top: 5px; font-size: 0.85rem;">AIに合わせてプロンプトの形式を自動調整します。</p>
+                <h2 id="modalTitle" class="modal-title">タイトル</h2>
+                <p id="modalDesc" class="modal-desc" style="margin-top: 5px; font-size: 0.85rem;">説明文</p>
             </div>
-            <div id="optionList" class="option-list"><div class="option-wrapper selected"><div class="option-btn-container"><div class="option-btn-label">Gemini</div><div class="option-info-btn">?</div></div></div><div class="option-wrapper"><div class="option-btn-container"><div class="option-btn-label">ChatGPT</div><div class="option-info-btn">?</div></div></div><div class="option-wrapper"><div class="option-btn-container"><div class="option-btn-label">Midjourney</div><div class="option-info-btn">?</div></div></div><div class="option-wrapper"><div class="option-btn-container"><div class="option-btn-label">Stable Diff</div><div class="option-info-btn">?</div></div></div></div>
+            <div id="optionList" class="option-list"></div>
         </div>
     </div>
 
@@ -181,7 +193,7 @@
         <h1>🎨 Prompt Maker Pro</h1>
         
         <div class="update-notice" onclick="openModal('updateModal')">
-            🔔 更新情報：トップ画面も「横3列」のスマートデザインに！
+            🔔 更新情報：誤タップ防止のため「？」ボタンを右下に移動！
         </div>
 
         <div class="how-to-wrap"><button class="how-to-open-btn" onclick="openModal('howToModal')">💡 ツールの使い方を見る</button></div>
@@ -339,12 +351,12 @@
                 ]
             },
             camera: {
-                title: "アングル", desc: "カメラの撮影角度を指定します。",
+                title: "アングル", desc: "カメラの撮影角度を指定します。※AIが正面を向きやすい場合は、これを選択すると強制力が高まります。",
                 options: [
                     { val: '', label: '指定なし', desc: '正面からの標準的な視点になります。' }, 
-                    { val: 'wide angle, panoramic', label: '広角・パノラマ', desc: '背景の風景や空間を広くダイナミックに見せたい時に。' },
-                    { val: 'from above, high angle', label: '俯瞰 (上から)', desc: '上空や高い位置から被写体を見下ろす視点。' }, 
-                    { val: 'from below, low angle', label: 'あおり (下から)', desc: '下から見上げる視点。足の長さや迫力を強調します。' }
+                    { val: 'wide angle shot, panoramic view', label: '広角・パノラマ', desc: '背景の風景や空間を広くダイナミックに見せたい時に。' },
+                    { val: 'extreme high angle shot, looking down from above, bird\'s eye view', label: '俯瞰 (上から)', desc: '上空や高い位置から被写体を見下ろす視点。' }, 
+                    { val: 'extreme low angle shot, looking up from below, worm\'s eye view', label: 'あおり (下から)', desc: '下から見上げる視点。足の長さや迫力を強調します。' }
                 ]
             },
             quality: {
@@ -685,6 +697,11 @@
                 
                 if (t === 'chatgpt') {
                     res = "You MUST generate an image.\n" + res;
+                    
+                    // ▼ここを追加：ChatGPTの時だけアングルの絶対遵守を命令する▼
+                    if (currentMode === 'individual' && state.camera) {
+                        res += `\n*IMPORTANT: Strictly apply the camera angle [ ${state.camera} ]. Do NOT use a standard front-facing composition.`;
+                    }
                 }
                 
             } else if (t === 'midjourney') {
